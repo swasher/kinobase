@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% load static %}
+<script type="text/javascript">
+{#    var game_pk = "{{ game.pk }}";#}
+</script>
+
+
+{#<img src="{{ game.poster }}" height="400px">#}
+
+<img src="{{ game.data.cover_big }}" alt="{{ game.poster_image.name }}">
+
+    {% if tags %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% for tag in tags %}
+                <span id="{{ tag.pk }}"
+                      onclick="toggle_tag({{ game.pk }}, {{ tag.pk }})"
+                      class="tag-toggle label label-pointer-cursor
+                      {% if tag.active %} label-success {% else %} label-default {% endif %}"
+                >{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<table class="table table-bordered">
+  <tr><td>Title</td><td>{{ game.data.name }}</td></tr>
+  <tr><td>Summary</td><td>{{ game.data.summary }}</td></tr>
+  <tr><td>Summary</td><td>{{ game.data.storyline }}</td></tr>
+  <tr><td>Notice</td><td>{{ game.notice }}</td></tr>
+  <tr><td>Link</td><td><a href="{{ game.link }}">{{ game.name }} - GiantBomb</a></td></tr>
+
+  <tr>
+    <td>Genres</td>
+    <td>
+      <ul>
+      {% for genre in game.genres.all %}
+        <li>{{ genre.name }}</li>
+      {% endfor %}
+      </ul>
+    </td>
+  </tr>
+
+    <tr>
+        <td>Themes</td>
+        <td>
+            <ul>
+                {% for theme in game.themes.all %}
+                    <li>{{ theme.name }}</li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+
+  <tr>
+    <td>Developers</td>
+    <td>
+      <ul>
+        {% for developer in game.developers.all %}
+          <li>{{ developer.name }}</li>
+        {% endfor %}
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td>Publishers</td>
+    <td>
+      <ul>
+        {% for publisher in game.publishers.all %}
+          <li>{{ publisher.name }}</li>
+        {% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<div class='two-buttons'>
+    <div style='float: left;'>
+        <button id="{{ game.pk }}" type="button" class="btn btn-danger btn-sm" data-toggle="confirmation-delete-game">
+            <span class="glyphicon glyphicon-trash"></span> DELETE
+        </button>
+    </div>
+    <div style='float: right;'>
+        <button id="{{ game.pk }}" type="button" class="btn btn-success btn-sm">
+            <span class="glyphicon glyphicon-save"></span> SAVE
+        </button>
+    </div>
+</div>
+
+
+{% endblock %}

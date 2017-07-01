@@ -1,0 +1,32 @@
+---
+# Ubuntu 16.10 have legacy one-byte locale en_US ISO-8859-1 (formely Latin 1).
+# It mess MC special symbols
+# This set en_US.UTF-8 as default locale
+
+- name: Remove unnecesssary locale
+  locale_gen:
+    name: en_US
+    state: absent
+  become: yes
+
+- locale_gen:
+    name: en_US.UTF-8
+    state: present
+  become: yes
+
+- name: Set LANGUAGE variable
+  lineinfile:
+    path: /etc/default/locale
+    line: 'LANGUAGE="en_US.UTF-8"'
+  become: yes
+
+- name: Set LANGUAGE variable
+  lineinfile:
+    path: /etc/default/locale
+    line: 'LC_ALL="en_US.UTF-8"'
+  become: yes
+
+# Нужно вобще-то установить переменную окружения, то так не работает.
+# В Ansible переменные устанавливаются только per-command, как я понял.
+#- environment:
+#    LANGUAGE: en_US.UTF-8

@@ -1,0 +1,60 @@
+---
+- name: remove existing environmrent
+  file: path={{ virtualenv }}
+        state=absent
+
+
+
+# Through bug pip module do not install virtualenv correctly. Install it via `shell` below
+# https://github.com/ansible/ansible-modules-core/issues/2568
+#- name: create fresh environment
+#  pip:
+#    chdir: "{{ project_root }}"
+#    requirements: "{{ project_root }}/requirements.txt"
+#    virtualenv: "{{ virtualenv }}"
+#    virtualenv_command: "{{ virtualenv_command }}"
+
+#- name: create fresh environment
+#  command: pyvenv virtualenvironment
+#  args:
+#    chdir: "{{ user_home }}"
+#
+#- name: upgrade pip
+#  shell: "source /home/vagrant/virtualenvironment/bin/activate && pip install -U pip"
+#  args:
+#    executable: /bin/bash
+#
+#- name: install requirements
+#  shell: "source /home/vagrant/virtualenvironment/bin/activate && cd ~/cinemaset && pip install -r requirements.txt"
+#  args:
+#    chdir: "{{ project_root }}"
+#    executable: /bin/bash
+
+
+
+#============
+
+- name: Install venv
+  apt:
+    pkg: "{{item}}"
+    state: installed
+    update-cache: yes
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+  with_items:
+    - python3-venv
+  become: yes
+
+- name: Create virtual environment
+  shell: python3 -m venv {{virtualenv}}
+
+- name: Update pip
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{virtualenv}}"
+
+- name: Install project requirements
+  pip:
+    requirements: "{{project_root}}/requirements.txt"
+    virtualenv: "{{virtualenv}}"
+    extra_args: '--quiet'

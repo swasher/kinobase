@@ -1,0 +1,24 @@
+# Приватные файлы
+usefull_info.md
+/test
+vault_password
+/latest.dump
+/test/
+.env
+
+
+# Файлы, создаваемые приложением
+*.pyc
+*.log
+*.retry
+__pycache__/
+.idea/
+.vagrant/
+.fab_tasks~
+
+
+# Статика
+test/*
+/media
+/bower_components/
+/TODO.md

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static "accounts.css" %}">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Please login</h3>
+                </div>
+                <div class="panel-body">
+
+                    {# DEPRECATED  <form accept-charset="UTF-8" method="post" role="form" action="{% url 'login' %}">#}
+
+                    <form accept-charset="UTF-8" method="post" role="form" >
+                    {% csrf_token %}
+
+{#                        {% if next %}#}
+{#                            <input type="hidden" name="next" value="{{ next }}" />#}
+{#                        {% endif %}#}
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                </span>
+                                <input class="form-control" type="email" id="email" name="email" value="{{ form.email.value }}" placeholder="E-mail Address">
+                            </div>
+                            {{ form.email.errors }}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                </span>
+                                <input class="form-control" type="password" id="password" name="password"  placeholder="Password">
+                            </div>
+                            {{ form.password.errors }}
+                        </div>
+
+                        {% comment %}
+                        <div class="checkbox">
+                            <label>
+                                <input name="remember" type="checkbox" value="Remember Me"> Remember Me
+                            </label>
+                        </div>{% endcomment %}
+
+                        <input formaction="{% url 'login' %}" class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+
+{#                        <p>#}
+{#                        <div class="text-center">#}
+                        {#                            <a formaction="{% url 'user_registration' %}" href="{% url 'user_registration' %}">Or register</a>#}
+{#                            <button formaction="{% url 'user_registration' %}" type="button submit" class="btn btn-link">#}
+{#                                Or register</button>#}
+{#                        </div>#}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+  {{ form.non_field_errors }}
+  <div class="row searchbar">
+    <div class="col-md-8 col-md-offset-2">
+      <form id="create-tag-form" class="form-inline" role="form" method="POST" accept-charset="UTF-8" action="{% url 'add_tag_ajax' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="text"
+                 class="form-control input-lg"
+                 placeholder="new tag"
+                 name="tag_name"
+          >
+        </div>
+        {{ form.name.errors }}
+        <button onclick="create_tag()" type="button" class="btn btn-lg btn-success">New tag</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+{% csrf_token %}
+<div class="panel panel-default">
+    <div class="panel-body" id="tags">
+        {% for tag in tags %}
+
+            <span id="{{ tag.pk }}" class="tag label label-default">
+                <span class="tagname">{{ tag.name }}</span>
+                <a>
+                    <i data-toggle="confirmation-delete-tag"
+                       class="remove glyphicon glyphicon-remove-sign glyphicon-white">
+                    </i>
+                </a>
+            </span>
+
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

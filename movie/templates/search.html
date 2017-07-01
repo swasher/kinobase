@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+</script>
+
+    
+
+<div class="container">
+
+    <div class="row searchbar">
+        <div class="col-md-8 col-md-offset-2" >
+            <form class="form-inline" action="{% url 'search' %}" method="post">
+                {{ form.non_field_errors }}
+                {% csrf_token %}
+                <div class="form-group">
+                    {# {{ form.movie.label_tag }}#}
+                    {{ form.movie }}
+                </div>
+                <button type="submit" class="btn btn-lg btn-success">Search</button>
+                {{ form.movie.errors }}
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% if movies %}
+{#<div class="container-fluid">#}
+    <table class="table table-bordered">
+            <tr>
+              <th>Cover</th>
+              <th>Name</th>
+              <th>PC release</th>
+              <th>Add</th>
+            </tr>
+        {% for movie in movies %}
+            <tr>
+                <td rowspan=2> <a href="{{ movie.site_detail_url }}"> <img src="{{ movie.cover_url}}" alt="cover"> </a> </td>
+                <td>{{ movie.name }}
+
+                    <p> popularity {{movie.popularity}},
+                </td>
+                <td>
+                    {{ movie.first_release_date|date:"Y" }}
+                </td>
+                <td class="vert-align">
+                    <a type="button"
+                       class="btn btn-success {% if movie.exist %}disabled{% endif %}"
+                       href="{% url 'add_movie' movie.id %}">
+                       <span class="glyphicon glyphicon-plus"></span></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=3 class="small">STORY: {{ movie.storyline|default_if_none:"" }}
+                                         <p>SUMMARY: {{ movie.summary }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{#</div>#}
+
+{% endblock %}

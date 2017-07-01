@@ -1,0 +1,102 @@
+{% comment %}<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 class="panel-title">Game Lists</h1>
+  </div>
+<ul class="list-group" style="list-style-type:none">
+  <li><a href="#" class="list-group-item list-group-item-danger">Done <span class="badge">30</span> </a></li>
+  <li><a href="#" class="list-group-item list-group-item-info">Planned <span class="badge">10</span> </a></li>
+  <li><a href="#" class="list-group-item list-group-item-success">Reject <span class="badge">3</span> </a></li>
+  <li><a href="#" class="list-group-item list-group-item-warning">In pregress <span class="badge">8</span> </a></li>
+</ul>
+</div>{% endcomment %}
+
+{% if context_tags %}
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">My tags</h1>
+      </div>
+
+      <ul class="list-group" style="list-style-type:none">
+          {% for t in context_tags %}
+            <li>
+                <a href="{% url 'movies' %}?filter=tag&pk={{ t.pk }}" class="list-group-item">
+                    {{ t.name }} <span class="badge">{{ t.total }}</span>
+                </a>
+            </li>
+          {% endfor %}
+            --- {{ context_tags }}---
+      </ul>
+  </div>
+{% endif %}
+
+{% if context_genres %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">My Genres</h1>
+        </div>
+
+        <ul class="list-group" style="list-style-type:none">
+            {% for i in context_genres %}
+                <li>
+                    <div class="list-group-item">{{ i.name }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% if context_themes %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">My Themes</h1>
+        </div>
+
+        <ul class="list-group" style="list-style-type:none">
+            {% for i in context_genres %}
+                <li>
+                    {{ i.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% comment %}111
+{% for tag in tags %}
+    <span id="{{ tag.pk }}"
+          class="tag-toggle label label-pointer-cursor
+                      {% if tag.active %} label-success {% else %} label-default {% endif %}">
+                    {{ tag.name }}</span>
+{% endfor %}
+222{% endcomment %}
+
+<!-- Panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 class="panel-title">Sidebar panel widget</h1>
+  </div>
+  <div class="panel-body">
+    <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
+  </div>
+</div>
+
+<!-- Panel -->
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h4 class="panel-title">Sidebar panel widget</h4>
+  </div>
+  <div class="panel-body">
+    <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
+  </div>
+</div>
+
+<!-- Address module -->
+<div class="well well-lg">
+  <address>
+  <strong>getYourthemes</strong><br>
+  Address : Connaught Place, Delhi 110001<br>
+  Mobile No. : +91 99999999XX<br>
+  Phone No. : 011 256250XX<br>
+  Fax : 75688455XX
+  </address>
+</div>
