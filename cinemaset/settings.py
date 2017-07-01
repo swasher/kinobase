@@ -58,16 +58,24 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 ACCOUNT_ACTIVATION_DAYS = 1  # One-day user activation window
 REGISTRATION_AUTO_LOGIN = True
 
+# EMAIL_HOST = config('EMAIL_HOST')
+# EMAIL_PORT = config('EMAIL_PORT')
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 ANYMAIL = {
     "MAILGUN_API_KEY": config('MAILGUN_API_KEY'),
     "MAILGUN_SENDER_DOMAIN": config('MAILGUN_SENDER_DOMAIN'),  # your Mailgun domain, if needed
 }
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"  # or sendgrid.EmailBackend, or...
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 #DEFAULT_FROM_EMAIL = "you@example.com"                   # if you don't already have this in settings
 
 # Application definition
 
-AUTH_USER_MODEL = 'customuser.User'
+AUTH_USER_MODEL = 'accounts.User'
 # AUTHENTICATION_BACKENDS = [
 #     'accounts.backends.EmailBackend',
 #     'django.contrib.auth.backends.ModelBackend'
@@ -84,8 +92,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'taggit',
-    #'accounts',
-    'customuser',
+    'accounts',
+    #'customuser',
     'movie',
     'star_ratings',
     'anymail',

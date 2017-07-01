@@ -2,8 +2,10 @@
 
 # Install various developer's helpers, preferabbly bash completions
 
-- include: pip_completions.yml
-- include: django_completions.yml
 - include: ansible_editor.yml
+- include: binary.yml
+- include: django_completions.yml
 - include: fabric_completions.yml
-- include: various.yml
+- include: heroku_completions.yml
+- include: pip_completions.yml
+- include: ssh-agent.yml

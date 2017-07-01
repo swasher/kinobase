@@ -4,8 +4,3 @@
     url: https://raw.githubusercontent.com/stefansundin/heroku-bash-completion/master/heroku-completion.bash
     dest: /etc/bash_completion.d/heroku
   become: yes
-
-#- name: Add django completions to bashrc
-#  lineinfile: >
-#    dest=/home/{{remote_user}}/.bashrc
-#    line="source /home/{{remote_user}}/{{dotfiles}}/django-completion.bash"

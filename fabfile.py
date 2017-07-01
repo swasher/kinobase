@@ -5,7 +5,7 @@ from fabric.operations import prompt
 from fabric.context_managers import lcd
 
 env.use_ssh_config = True
-env.project_path = '/home/swasher/cinemaset'
+env.project_path = '/home/vagrant/cinemaset/'
 
 
 # def staging():
@@ -20,10 +20,6 @@ env.project_path = '/home/swasher/cinemaset'
 
 def github():
     local('ssh-add ~/.ssh/github')
-
-
-def heroku_migrate():
-    local('heroku run python manage.py migrate')
 
 
 def provision():
@@ -49,24 +45,42 @@ def drop_db():
     Usage:
     fab drop_db
     """
-    with lcd('provision'):
+    with lcd(env.project_path + 'provision'):
         local('ansible-playbook -i inventories/all --limit development drop_db.yml')
 
-
-def get_heroku_dump():
     with lcd(env.project_path):
-        local('heroku pg:backups capture') # may be add --app `heroku app name`
-        #local('curl -o latest.dump `heroku pg:backups public-url`')
-        local('heroku pg:backups:download')
+        local('find . -path *migrations* -name "*.py" -not -path "*__init__*" -exec rm {} \;')
+
+
+def create_django_superuser():
+    """
+    Create django superuser
+
+    Usage:
+    fab create_django_superuser
+    """
+    verbose = ''
+    #verbose += '-vvv'
+    with lcd(env.project_path + 'provision'):
+        local('ansible-playbook -i inventories/all --limit development {verbose} create_superuser.yml'
+              .format(verbose=verbose))
+
 
 def restore_db():
     with lcd(os.path.join(env.project_path, 'provision')):
         local('ansible-playbook -i inventories/all -vvv --limit development restore_db.yml')
-        #local('ansible localhost -a "pwd"')
 
 
 def run_pgadmin():
     local('python /home/vagrant/pgadminvirt/lib/python3.4/site-packages/pgadmin4/pgAdmin4.py')
+
+
+def get_heroku_dump():
+    with lcd(env.project_path):
+        local('heroku pg:backups capture')  # may be add --app `heroku app name`
+        # local('curl -o latest.dump `heroku pg:backups public-url`')
+        local('heroku pg:backups:download')
+
 
 def heroku_migrate():
     local('heroku run python manage.py migrate')
