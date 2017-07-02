@@ -22,6 +22,14 @@ def github():
     local('ssh-add ~/.ssh/github')
 
 
+def freeze():
+    """
+    Remove pkg-resources from requirements.txt.
+    It is Ubuntu bug: https://bugs.launchpad.net/ubuntu/+source/python-pip/+bug/1635463
+    :return: 
+    """
+    local('pip freeze | grep -v "pkg-resources" > requirements.txt')
+
 def provision():
     """
     Setup all on provision/staging/deployment via Ansible. Development must run inside Vagrant box.
