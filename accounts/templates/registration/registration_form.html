@@ -1,6 +1,9 @@
-{% extends "base.html" %}
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
 
-{% block body %}
+
+
+{% block content %}
 
 {% load static %}
 <link rel="stylesheet" href="{% static "accounts.css" %}">
@@ -10,20 +13,15 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Registration</h3>
+                    <h3 class="panel-title">{% trans "Register for an account" %}</h3>
                 </div>
                 <div class="panel-body">
 
-                    {# DEPRECATED  <form accept-charset="UTF-8" method="post" role="form" action="{% url 'login' %}">#}
 
                     <form accept-charset="UTF-8" method="post" role="form" >
                     {% csrf_token %}
 
-{#                        {% if next %}#}
-{#                            <input type="hidden" name="next" value="{{ next }}" />#}
-{#                        {% endif %}#}
-
-{#                        {{ form.as_p }}#}
+                        {# {{ form.as_p }} #}
 
                         <div class="form-group">
                             <div class="input-group">
@@ -44,7 +42,7 @@
                                 <input class="form-control" type="password" id="id_password1" name="password1" required
                                        placeholder="Password">
                             </div>
-                            {{ form.password.errors }}
+                            {{ form.password1.errors }}
                         </div>
 
                         <div class="form-group">
@@ -55,10 +53,11 @@
                                 <input class="form-control" type="password" id="id_password2" name="password2" required
                                        placeholder="Password">
                             </div>
-                            {{ form.password.errors }}
+                            {{ form.password2.errors }}
                         </div>
 
-                        <input formaction="{% url 'registration_register' %}" class="btn btn-lg btn-success btn-block" type="submit" value="Register">
+                        <input formaction="{% url 'registration_register' %}" class="btn btn-lg btn-success btn-block"
+                               type="submit" value="{% trans 'Submit' %}">
 
                     </form>
                 </div>

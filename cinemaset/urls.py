@@ -28,12 +28,11 @@ urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^', include('accounts.urls')),
     url(r'^', include('movie.urls')),
-
-    #TODO deprecated
-
-    # url(r'^accounts/logout/$', auth.views.logout),
-
-    # from django-registartion-redux
-    url(r'^accounts/', include('registration.backends.default.urls')),
-
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns.append(
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )

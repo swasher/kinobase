@@ -15,16 +15,10 @@ import ast
 import dj_database_url
 from decouple import config
 
-
-SERVER_TYPE = config('SERVER_TYPE')
-PRODUCTION = True if SERVER_TYPE == 'heroku' else False
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
-
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
     'static',
 ]
@@ -33,13 +27,12 @@ STATICFILES_DIRS = [
 # heroku
 #
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #
 # ENVIRONMENT SETUP
 #
-DEBUG = config('DEBUG')
+DEBUG = config('DEBUG', cast=bool)
 SECRET_KEY = config('SECRET_KEY')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', '*').split(',')
@@ -58,14 +51,6 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 ACCOUNT_ACTIVATION_DAYS = 1  # One-day user activation window
 REGISTRATION_AUTO_LOGIN = True
 
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
 ANYMAIL = {
     "MAILGUN_API_KEY": config('MAILGUN_API_KEY'),
     "MAILGUN_SENDER_DOMAIN": config('MAILGUN_SENDER_DOMAIN'),  # your Mailgun domain, if needed
@@ -76,15 +61,11 @@ EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 # Application definition
 
 AUTH_USER_MODEL = 'accounts.User'
-# AUTHENTICATION_BACKENDS = [
-#     'accounts.backends.EmailBackend',
-#     'django.contrib.auth.backends.ModelBackend'
-# ]
 
 INSTALLED_APPS = [
-    'debug_toolbar',
-    'registration',
     'django.contrib.admin',
+    'accounts',        # accounts must be before registration, else 'django-registration-redux' using it's own templates
+    'registration',    # registration must be above 'django.contrib.auth'
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -92,16 +73,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'taggit',
-    'accounts',
-    #'customuser',
-    'movie',
     'star_ratings',
     'anymail',
+    'movie',
 ]
 
-# if not PRODUCTION:
-#     INSTALLED_APPS.append('debug_toolbar')
-#     INTERNAL_IPS = '172.28.128.10'
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    INTERNAL_IPS = '172.28.128.22'
+
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
