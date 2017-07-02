@@ -34,10 +34,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #
 DEBUG = config('DEBUG', cast=bool)
 SECRET_KEY = config('SECRET_KEY')
-
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', '*').split(',')
-DOMAIN = config('DOMAIN')
-
 LOGIN_REDIRECT_URL = 'movies'
 
 
@@ -50,6 +47,7 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 
 ACCOUNT_ACTIVATION_DAYS = 1  # One-day user activation window
 REGISTRATION_AUTO_LOGIN = True
+REGISTRATION_DEFAULT_FROM_EMAIL = 'admin@cinema.collect.pp.ua'
 
 ANYMAIL = {
     "MAILGUN_API_KEY": config('MAILGUN_API_KEY'),
