@@ -6,73 +6,60 @@
 {% load static %}
 <link rel="stylesheet" href="{% static "accounts.css" %}">
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Log in" %}</h3>
+
+<div class="row justify-content-center">
+
+    <div class="card">
+
+        <div class="card-header">
+            {% trans "Log in" %}
+        </div>
+
+        <div class="card-block">
+            <form accept-charset="UTF-8" method="post" role="form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                        <input type="email" class="form-control" id="id_username" name="username"
+                               placeholder="Enter email" value="{{ form.email.value }}"
+                               required autofocus>
+                    </div>
+                    {{ form.email.errors }}
                 </div>
-                <div class="panel-body">
 
-                    {# DEPRECATED  <form accept-charset="UTF-8" method="post" role="form" action="{% url 'login' %}">#}
-
-                    <form accept-charset="UTF-8" method="post" role="form" action="">
-                    {% csrf_token %}
-
-{#                        {% if next %}#}
-{#                            <input type="hidden" name="next" value="{{ next }}" />#}
-{#                        {% endif %}#}
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-envelope"></span>
-                                </span>
-                                <input class="form-control" type="email" id="id_username" name="username"
-                                       required autofocus
-                                       value="{{ form.email.value }}" placeholder="E-mail Address">
-                            </div>
-                            {{ form.email.errors }}
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-lock"></span>
-                                </span>
-                                <input class="form-control" type="password" id="id_password" name="password"  placeholder="Password">
-                            </div>
-                            {{ form.password.errors }}
-                        </div>
-
-                        {% comment %}
-                        <div class="checkbox">
-                            <label>
-                                <input name="remember" type="checkbox" value="Remember Me"> Remember Me
-                            </label>
-                        </div>{% endcomment %}
-
-                        <input  class="btn btn-lg btn-success btn-block" type="submit" value="{% trans 'Log in' %}">
-                        <input type="hidden" name="next" value="{{ next }}"/>
-
-{#                        <p>#}
-{#                        <div class="text-center">#}
-                        {#                            <a formaction="{% url 'user_registration' %}" href="{% url 'user_registration' %}">Or register</a>#}
-{#                            <button formaction="{% url 'user_registration' %}" type="button submit" class="btn btn-link">#}
-{#                                Or register</button>#}
-{#                        </div>#}
-
-                    </form>
-                    <p>{% trans "Forgot your password?" %} <a
-                            href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</p>
-                    <p>{% trans "Not a member?" %} <a
-                            href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</p>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                        <input class="form-control" type="password" id="id_password" name="password" placeholder="Password">
+                    </div>
+                    {{ form.password.errors }}
                 </div>
-            </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input name="remember" type="checkbox" value="Remember Me"> {% trans 'Remember Me' %}
+                    </label>
+                </div>
+
+                <input class="btn btn-lg btn-outline-success btn-block" type="submit" value="{% trans 'Log in' %}">
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                {% endif %}
+
+            </form>
+
+            <small id="emailHelp" class="form-text text-muted text-right">
+            {% trans "Forgot your password?" %}
+                <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.<br/>
+            {% trans "Not a member?" %}
+                <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.
+            </small>
         </div>
     </div>
 </div>
+
 
 
 {% endblock %}

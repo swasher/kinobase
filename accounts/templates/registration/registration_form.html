@@ -1,67 +1,54 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
 
-
-
 {% block content %}
 
 {% load static %}
 <link rel="stylesheet" href="{% static "accounts.css" %}">
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Register for an account" %}</h3>
+<div class="row justify-content-center">
+
+    <div class="card">
+
+        <div class="card-header">
+            {% trans "Register for an account" %}
+        </div>
+
+        <div class="card-block">
+            <form accept-charset="UTF-8" method="post" role="form" >
+            {% csrf_token %}
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                        <input class="form-control" type="email" id="email" name="email" required autofocus
+                               value="{{ form.email.value|default:'' }}" placeholder="Email">
+                    </div>
+                    {{ form.email.errors }}
                 </div>
-                <div class="panel-body">
 
-
-                    <form accept-charset="UTF-8" method="post" role="form" >
-                    {% csrf_token %}
-
-                        {# {{ form.as_p }} #}
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-envelope"></span>
-                                </span>
-                                <input class="form-control" type="email" id="email" name="email" required autofocus
-                                       value="{{ form.email.value|default:'' }}" placeholder="E-mail Address">
-                            </div>
-                            {{ form.email.errors }}
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-lock"></span>
-                                </span>
-                                <input class="form-control" type="password" id="id_password1" name="password1" required
-                                       placeholder="Password">
-                            </div>
-                            {{ form.password1.errors }}
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-lock"></span>
-                                </span>
-                                <input class="form-control" type="password" id="id_password2" name="password2" required
-                                       placeholder="Password">
-                            </div>
-                            {{ form.password2.errors }}
-                        </div>
-
-                        <input formaction="{% url 'registration_register' %}" class="btn btn-lg btn-success btn-block"
-                               type="submit" value="{% trans 'Submit' %}">
-
-                    </form>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                        <input class="form-control" type="password" id="id_password1" name="password1"
+                               required placeholder="Password">
+                    </div>
+                    {{ form.password1.errors }}
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                        <input class="form-control" type="password" id="id_password2" name="password2"
+                               required placeholder="Password again">
+                    </div>
+                    {{ form.password2.errors }}
+                </div>
+
+                <input formaction="{% url 'registration_register' %}" class="btn btn-lg btn-outline-success btn-block"
+                       type="submit" value="{% trans 'Submit' %}">
+
+            </form>
         </div>
     </div>
 </div>

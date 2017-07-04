@@ -56,6 +56,8 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 #DEFAULT_FROM_EMAIL = "you@example.com"                   # if you don't already have this in settings
 
+TMDB_API_KEY = config('TMDB_API_KEY_V3')
+
 # Application definition
 
 AUTH_USER_MODEL = 'accounts.User'

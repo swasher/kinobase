@@ -1,26 +1,22 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans');
-/**
- * Padding-top is required if using .navbar-fixed-top.
- * This can be removed Remove if using .navbar-static-top.
- * The height may need to be changed if the height of you
- * navigation changes.
-*/
 
-body { padding-top: 70px; }
+html {
+    height: 100%;
+}
 
-/**
- * Bootstrap requires a containing element to wrap site contents
- * and house the grid system. You may choose one of two containers.
- * Use .container for a responsive fixed width container.
- * Use .container-fluid for a full width container.
+body {
+    /* Отступ, чтобы футер не залезал на хедер (если футер - sticky) */
+    margin-bottom: 60px;
+    height: 100%;
+}
 
- * If using container-fluid, you may need to set a maximum width,
- * so that the container will not spread to the entire viewport.
-*/
+.container {
+    max-width: 1200px;
+    height: 100%;
+    margin-bottom: 60px;
+}
 
-.container-fluid { max-width: 1140px; }
-
-.sidebar, .header, .footer, .slider {
+.sidebar, .header, .slider {
     /*border:1px solid #00C;*/
     margin:10px 0;
     padding:20px;
@@ -63,6 +59,8 @@ img {
     -moz-box-shadow: 0 2px 6px 2px rgba(0,0,0,0.75);
     box-shadow: 0 2px 6px 2px rgba(0,0,0,0.75);
     margin-bottom: 20px;
+    margin-right: 2px;
+    margin-left: 2px;
 
     -webkit-transition: 1s -webkit-filter linear;
     -moz-transition: 1s -moz-filter linear;
@@ -70,34 +68,56 @@ img {
     -ms-transition: 1s -ms-filter linear;
     -o-transition: 1s -o-filter linear;
     transition: 1s filter linear;
+
+    width: 185px;
+    height: 278px;
 }
 
 img:hover {
     /*filter: none; !* IE6-9 *!*/
     /*-webkit-filter: invert(100%); !* Google Chrome, Safari 6+ & Opera 15+ *!*/
     /*-webkit-filter: blur(5px) brightness(0.5);*/
-    -webkit-filter: drop-shadow(0px 0px 30px black);
+    -webkit-filter: drop-shadow(0px 0px 10px black);
 }
 
-.grid-itemm {
-    width: 175px;
-    height: 262px;
-    border: 1px;
-    border-color: #0000CC;
-}
+/*.grid-itemm {*/
+    /*width: 175px;*/
+    /*height: 262px;*/
+    /*border: 1px;*/
+    /*border-color: #0000CC;*/
+/*}*/
 
 .deck {
     color: dimgray;
     font-size: 2px;
 }
 
-/*.footer {
+/* Custom page footer */
+
+/*#footer {
+    color: dimgrey;
     border: 1px solid blue;
 }*/
 
-#footer {
-    color: dimgrey;
+/*.footer {
+    padding-top: 1.5rem;
+    color: dimgray;
+    border-top: .05rem solid #e5e5e5;
+    text-align: center !important;
+}*/
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: dimgray;
+    text-align: center !important;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+    background-color: #272B30;
 }
+
 
 .label-pointer-cursor {
     cursor: pointer;

@@ -37,10 +37,10 @@ function create_tag() {
     })
 }
 
-function toggle_tag(game_pk, tag_pk) {
+function toggle_tag(movie_pk, tag_pk) {
     $.ajax({
         url: '/toggle_tag/',
-        data: {'tag_pk': tag_pk, 'game_pk': game_pk},
+        data: {'tag_pk': tag_pk, 'movie_pk': game_pk},
         dataType: 'json',
         method: 'POST',
         success: function (json) {
@@ -101,9 +101,9 @@ $(document).ready(function () {
 
 
     //
-    // Confirmation for delete game
+    // Confirmation for delete movie
     //
-    $('[data-toggle="confirmation-delete-game"]').confirmation({
+    $('[data-toggle="confirmation-delete-movie"]').confirmation({
         title: "Are you sure to remove?",
         placement: "right",
         singleton: "True",
@@ -114,10 +114,10 @@ $(document).ready(function () {
         btnOkIcon: "glyphicon glyphicon-remove",
         btnCancelLabel: "&nbsp;Cancel",
         btnCancelIcon: "glyphicon glyphicon-repeat",
-        rootSelector: '[data-toggle=confirmation-delete-game]',
+        rootSelector: '[data-toggle=confirmation-delete-movie]',
         onConfirm: function (event, element) {
-            var game_pk = $(this).attr('id');
-            $.post("/delete_game/", {game_pk: game_pk})
+            var movie_pk = $(this).attr('id');
+            $.post("/delete_movie/", {movie_pk: movie_pk})
                 .done(function (json) {
                     if (json['status']=='sucess') {
                         // json.redirect contains the string URL to redirect to

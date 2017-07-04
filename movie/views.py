@@ -1,4 +1,6 @@
 import datetime
+from operator import itemgetter
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.conf import settings
@@ -8,6 +10,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Count
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+import tmdbsimple as tmdb
 
 from .forms import MovieForm
 from .models import Movie
@@ -30,12 +34,59 @@ def search(request):
         if form.is_valid():
             search_string = form.cleaned_data['movie']
 
+            tmdb.API_KEY = settings.TMDB_API_KEY
 
+            c = tmdb.Configuration()
+            """
+            Example configuration info
+            {
+                'change_keys': ['adult', 'air_date', 'also_known_as', 'alternative_titles', 'biography', 'birthday', 'budget', 'cast', 'certifications', 'character_names', 'created_by', 'crew', 'deathday', 'episode', 'episode_number', 'episode_run_time', 'freebase_id', 'freebase_mid', 'general', 'genres', 'guest_stars', 'homepage', 'images', 'imdb_id', 'languages', 'name', 'network', 'origin_country', 'original_name', 'original_title', 'overview', 'parts', 'place_of_birth', 'plot_keywords', 'production_code', 'production_companies', 'production_countries', 'releases', 'revenue', 'runtime', 'season', 'season_number', 'season_regular', 'spoken_languages', 'status', 'tagline', 'title', 'translations', 'tvdb_id', 'tvrage_id', 'type', 'video', 'videos'],
+                'images': {
+                    'secure_base_url': 'https://image.tmdb.org/t/p/',
+                    'profile_sizes': ['w45', 'w185', 'h632', 'original'],
+                    'poster_sizes': ['w92', 'w154', 'w185', 'w342', 'w500', 'w780', 'original'],
+                    'still_sizes': ['w92', 'w185', 'w300', 'original'],
+                    'logo_sizes': ['w45', 'w92', 'w154', 'w185', 'w300', 'w500', 'original'],
+                    'backdrop_sizes': ['w300', 'w780', 'w1280', 'original'],
+                    'base_url': 'http://image.tmdb.org/t/p/'
+                }
+            }
+            """
+            configuration = c.info()
+            base_url = configuration['images']['secure_base_url']
+            poster_size = 'w185'
+            prefix = base_url + poster_size
+
+            search = tmdb.Search()
+            response = search.movie(query=search_string)
+
+            movies_unsorted = search.results
+            movies = sorted(movies_unsorted, key=itemgetter('popularity'), reverse=True)
+            """
+            Example movie info 
+            {
+                'adult': False,
+                'video': False,
+                'overview': 'When a CIA operation to purchase classified Russian documents is blown by a rival agent, who then shows up in the sleepy seaside village where Bourne and Marie have been living. The pair run for their lives and Bourne, who promised retaliation should anyone from his former life attempt contact, is forced to once again take up his life as a trained assassin to survive.',
+                'vote_average': 7.2,
+                'poster_path': '/6a74OaZArLNNDHK9SdiLBUu2JYj.jpg',
+                'backdrop_path': '/e1svWjxTXMOmdgkVLSPHSfWv90R.jpg',
+                'genre_ids': [28, 18, 53],
+                'release_date': '2004-07-23',
+                'title': 'The Bourne Supremacy',
+                'id': 2502,
+                'vote_count': 2570,
+                'popularity': 5.455147,
+                'original_language': 'en',
+                'original_title': 'The Bourne Supremacy'
+            }
+            """
     else:
         form = MovieForm()
-        response = None
+        movies = None
+        prefix = None
 
-    return render(request, 'search.html', {'form':form, 'movies':response})
+    return render(request, 'search.html', {'form':form, 'movies':movies, 'prefix':prefix})
 
 
 @login_required
