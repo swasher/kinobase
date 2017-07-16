@@ -1,94 +1,98 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "movie.css" %}">
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function () {
+
+        var movie_pk = "{{ movie.pk }}";
+
+        $(".button_delete").confirm({
+            title: 'What is up?',
+            content: 'Here goes a little content',
+            type: 'green',
+            buttons: {
+                ok: {
+                    text: "ok!",
+                    btnClass: 'btn-primary',
+                    keys: ['enter'],
+                    action: function () {
+                        console.log('the user clicked confirm');
+                    }
+                },
+                cancel: function () {
+                    console.log('the user clicked cancel');
+                }
+            }
+        });
+
+    })
+</script>
+{% endblock %}
 
 {% block content %}
-{% load static %}
-<script type="text/javascript">
-{#    var game_pk = "{{ game.pk }}";#}
-</script>
 
+<div class="row">
+    <div class="col">
+        <img src="{{ prefix }}{{ movie.poster_path }}" alt="" >
+    </div>
 
-{#<img src="{{ game.poster }}" height="400px">#}
+    <div class="col">
+        {% if tag_list %}
+            <div class="card" id="tag-panel">
+                <div class="card-block">
+                    {% for tag in tag_list %}
+                        <span id="{{ tag.pk }}"
+                              onclick="toggle_tag_ajax({{ movie.id }}, {{ tag.pk }})"
+                              class="tag-toggle badge badge-default label-pointer-cursor
+                              {% if tag.active %} badge-success {% else %} badge-default {% endif %}"
+                        >{{ tag.name }}</span>
 
-<img src="{{ game.data.cover_big }}" alt="{{ game.poster_image.name }}">
+                    {% endfor %}
+                </div>
 
-    {% if tags %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            {% for tag in tags %}
-                <span id="{{ tag.pk }}"
-                      onclick="toggle_tag({{ game.pk }}, {{ tag.pk }})"
-                      class="tag-toggle label label-pointer-cursor
-                      {% if tag.active %} label-success {% else %} label-default {% endif %}"
-                >{{ tag.name }}</span>
-            {% endfor %}
+            </div>
+        {% endif %}
+
+        <table class="table table-bordered">
+            <tr><td>Title</td><td>{{ movie.title }} [{{ movie.original_title }}]</td></tr>
+            <tr><td>overview</td><td>{{ movie.overview }}</td></tr>
+            <tr><td>Release date</td><td>{{ movie.release_date }}</td></tr>
+            <tr><td>Notice</td><td>{{ movie.notice }}</td></tr>
+            <tr><td>Link</td>
+                <td><span class="badge badge-info">
+                        <a href="https://www.themoviedb.org/movie/{{ movie.id }}">TMDB</a>
+                    </span>
+                    <span class="badge badge-info">
+                        <a href="#">IMDB</a>
+                    </span>
+                    <span class="badge badge-info">
+                        <a href="#">Kinopoisk</a>
+                    </span>
+                    <span class="badge badge-info">
+                        <a href="#">Letterboxd</a>
+                    </span>
+                </td></tr>
+        </table>
+
+        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="First group">
+                <button id="{{ movie.pk }}" type="button" class="btn btn-danger btn-sm button_delete">
+                    <i class="fa fa-trash" aria-hidden="true"></i> DELETE {наверное это не нужно}
+                </button>
+            </div>
+            <div class="input-group">
+                <button id="{{ movie.pk }}" type="button" class="btn btn-success btn-sm">
+                    <i class="fa fa-save" aria-hidden="true"></i> SAVE
+                </button>
+            </div>
         </div>
-    </div>
-{% endif %}
 
-<table class="table table-bordered">
-  <tr><td>Title</td><td>{{ game.data.name }}</td></tr>
-  <tr><td>Summary</td><td>{{ game.data.summary }}</td></tr>
-  <tr><td>Summary</td><td>{{ game.data.storyline }}</td></tr>
-  <tr><td>Notice</td><td>{{ game.notice }}</td></tr>
-  <tr><td>Link</td><td><a href="{{ game.link }}">{{ game.name }} - GiantBomb</a></td></tr>
-
-  <tr>
-    <td>Genres</td>
-    <td>
-      <ul>
-      {% for genre in game.genres.all %}
-        <li>{{ genre.name }}</li>
-      {% endfor %}
-      </ul>
-    </td>
-  </tr>
-
-    <tr>
-        <td>Themes</td>
-        <td>
-            <ul>
-                {% for theme in game.themes.all %}
-                    <li>{{ theme.name }}</li>
-                {% endfor %}
-            </ul>
-        </td>
-    </tr>
-
-  <tr>
-    <td>Developers</td>
-    <td>
-      <ul>
-        {% for developer in game.developers.all %}
-          <li>{{ developer.name }}</li>
-        {% endfor %}
-      </ul>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Publishers</td>
-    <td>
-      <ul>
-        {% for publisher in game.publishers.all %}
-          <li>{{ publisher.name }}</li>
-        {% endfor %}
-      </ul>
-    </td>
-  </tr>
-</table>
-
-<div class='two-buttons'>
-    <div style='float: left;'>
-        <button id="{{ game.pk }}" type="button" class="btn btn-danger btn-sm" data-toggle="confirmation-delete-game">
-            <span class="glyphicon glyphicon-trash"></span> DELETE
-        </button>
-    </div>
-    <div style='float: right;'>
-        <button id="{{ game.pk }}" type="button" class="btn btn-success btn-sm">
-            <span class="glyphicon glyphicon-save"></span> SAVE
-        </button>
     </div>
 </div>
-
 
 {% endblock %}

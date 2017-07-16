@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static "movie.css" %}">
+{% block css %}
+    <link rel="stylesheet" href="{% static "movie.css" %}">
+{% endblock %}
 
 {% block content %}
 
+
     <div class="jumbotron">
         <h1>Cinema[set]</h1>
-        <p>Каталог твоих фильмов</p>
+        <p>Здесь живут твои фильмы</p>
         <p><a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login or register</a></p>
     </div>
+
 
 {% endblock %}

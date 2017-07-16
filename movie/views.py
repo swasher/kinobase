@@ -15,6 +15,7 @@ import tmdbsimple as tmdb
 
 from .forms import MovieForm
 from .models import Movie
+from .models import Tag
 
 
 def hello(request):
@@ -58,7 +59,7 @@ def search(request):
             prefix = base_url + poster_size
 
             search = tmdb.Search()
-            response = search.movie(query=search_string)
+            response = search.movie(query=search_string, language='ru-RU')
 
             movies_unsorted = search.results
             movies = sorted(movies_unsorted, key=itemgetter('popularity'), reverse=True)
@@ -90,74 +91,101 @@ def search(request):
 
 
 @login_required
-def movies(request):
-    user = request.user
+def movie(request, tmdbid):
 
-    if 'filter' in request.GET and request.GET['filter'] == 'tag':
-        movie_list = Movie.objects.filter(user=user, tag__pk=request.GET['pk'])
+    tmdb.API_KEY = settings.TMDB_API_KEY
+    movie = tmdb.Movies(tmdbid)
+    response = movie.info(language='ru-RU')
+
+    # TODO надо избавиться от частых вызовов (код в search) и либо обновлять эти, по сути, константы, изредка, или
+    # вобще их в settings прописать
+    base_url = 'http://image.tmdb.org/t/p/'
+    poster_size = 'w500'
+    prefix = base_url + poster_size
+
+    # Получаем список списков, присвоенных данному фильму: <QuerySet ['tag2', 'tag5']>
+    if Movie.objects.filter(tmdb_id=tmdbid).exists():
+        m = Movie.objects.get(tmdb_id=tmdbid)
+        active_tag_list = list(Tag.objects.filter(user=request.user, movie=m).values_list('name', flat=True))
+    else:
+        active_tag_list = []
+
+    # Получаем список всех тегов от текущего юзера в виде списка словарей:
+    # <QuerySet [{'active': 2, 'name': 'tag2', 'pk': 11}, {'active': 1, 'name': 'tag5', 'pk': 4}]>
+    # Каждый кортеж содержит имя pk, имя тега и кол-во игр с данным тегом
+    tag_list = Tag.objects \
+        .filter(user=request.user) \
+        .annotate(total=Count('movie')) \
+        .values('pk', 'name', 'total')
+
+    for tag in tag_list:
+        if tag['name'] in active_tag_list:
+            tag['active'] = True
+        else:
+            tag['active'] = False
+
+    return render(request, 'movie.html', {'movie': movie, 'prefix': prefix, 'tag_list': tag_list})
+
+
+@login_required
+def movies(request, tag=None):
+    base_url = 'http://image.tmdb.org/t/p/'
+    poster_size = 'w154'
+    prefix = base_url + poster_size
+
+    user = request.user
+    tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
+
+    if tag:
+        tag = int(tag)
+        movie_list = Movie.objects.filter(user=user, tag__pk=tag)
     else:
         movie_list = Movie.objects.filter(user=user)
 
-    paginator = Paginator(movie_list, 8)  # Show 6 movies per page
-    page = request.GET.get('page', 1)
+    # В базе у нас содержаться только ID, поэтому мы должны вытащить инфу из TMDB и уже ее передать в темплейт
+    tmdb.API_KEY = settings.TMDB_API_KEY
+    tmdb_movies = []
+    for m in movie_list:
+        #movie = tmdb.Movies(m.tmdb_id)
+        #response = movie.info(language='ru-RU')
+        tmdb_movies.append(dict(id=m.tmdb_id))
 
+    paginator = Paginator(tmdb_movies, 6)  # Show N movies per page
+    page = request.GET.get('page', 1)
     try:
-        movies = paginator.page(page)
+        tmdb_movies_paginator = paginator.page(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
-        movies = paginator.page(1)
+        tmdb_movies_paginator = paginator.page(1)
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
-        movies = paginator.page(paginator.num_pages)
+        tmdb_movies_paginator = paginator.page(paginator.num_pages)
 
-    return render(request, 'movies.html', {'movies': movies})
+    for m in tmdb_movies_paginator.object_list:
+        movie = tmdb.Movies(m['id'])
+        response = movie.info(language='ru-RU')
+        m.update(response)
+
+    return render(request, 'movies.html', {'movies': tmdb_movies_paginator, 'prefix': prefix, 'tags':tags})
 
 
 #
 # DEPRECATED
 # Не надо никаого add!!! Когда юзер добавляет фильм в список, он должен автоматически "добавляться"
 #
-@login_required
-@ensure_csrf_cookie
-def add_movie(request, igdb_id):
-
-    if not Movie.objects.filter(igdb_id=igdb_id).exists():
-
-        movie = Movie()
-        movie.igdb_id = igdb_id
-        movie.user = request.user
-        movie.date_add = datetime.datetime.now()
-        movie.save()
-
-    return redirect('/game/{}'.format(movie.id))
-
-
-@login_required
-def movie(request, pk):
-    movie = Movie.objects.get(pk=pk)
-
-    # Получаем список тегов, присвоенных данной игре: <QuerySet ['tag2', 'tag5']>
-    # active_tag_list = list(Tag.objects\
-    #     .filter(user=request.user, games=game)\
-    #     .values_list('name', flat=True))
-    #     # .values_list('name', 'active')
-    #     # .annotate(active=Count('games'))\
-
-    # tag_list = Tag.objects\
-    #     .filter(user=request.user) \
-    #     .annotate(total=Count('games'))\
-    #     .values('pk', 'name', 'total')
-    #
-    # for tag in tag_list:
-    #     if tag['name'] in active_tag_list:
-    #         tag['active'] = True
-    #     else:
-    #         tag['active'] = False
-
-    return render(request, 'movie.html', {'movie': movie,
-                                          #'tags': tag_list
-                                          })
-
+# @login_required
+# @ensure_csrf_cookie
+# def add_movie(request, igdb_id):
+#
+#     if not Movie.objects.filter(igdb_id=igdb_id).exists():
+#
+#         movie = Movie()
+#         movie.igdb_id = igdb_id
+#         movie.user = request.user
+#         movie.date_add = datetime.datetime.now()
+#         movie.save()
+#
+#     return redirect('/game/{}'.format(movie.id))
 
 
 @login_required
@@ -204,99 +232,113 @@ def delete_movie(request):
             return JsonResponse(results)
 
 
-# @login_required
-# def tags(request):
-#     tag_list = Tag.objects.all().filter(user=request.user)
-#     return render(request, 'tags.html', {'tags': tag_list})
+@login_required
+def tags(request):
+    tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
+    return render(request, 'tags.html', {'tags': tags})
 
 
-# @login_required
-# @ensure_csrf_cookie
-# # AJAX
-# def toggle_tag(request):
-#     if request.is_ajax() and request.method == u'POST':
-#         POST = request.POST
-#         if 'tag_pk' in POST and 'game_pk' in POST:
-#             tag_pk = int(POST['tag_pk'])
-#             game_pk = int(POST['game_pk'])
-#             tag = Tag.objects.get(pk=tag_pk)
-#             game = Game.objects.get(pk=game_pk)
-#
-#             if Tag.objects.filter(games=game, pk=tag_pk).exists():
-#                 tag.games.remove(game)
-#                 results = {'status': 'sucess_remove'}
-#                 return JsonResponse(results)
-#             else:
-#                 tag.games.add(game)
-#                 results = {'status': 'sucess_add'}
-#                 return JsonResponse(results)
+@login_required
+@ensure_csrf_cookie
+def toggle_tag_ajax(request):
+    """
+    AJAX
+    """
+    if request.is_ajax() and request.method == u'POST':
+        POST = request.POST
+        if 'tag_pk' in POST and 'movie_pk' in POST:
+            tag_pk = int(POST['tag_pk'])
+            movie_pk = int(POST['movie_pk'])
+            tag = Tag.objects.get(pk=tag_pk)
 
-# @login_required
-# @ensure_csrf_cookie
-# def delete_tag_ajax(request):
-#     """
-#     AJAX
-#     """
-#     if request.is_ajax() and request.method == u'POST':
-#         POST = request.POST
-#         results = {}
-#         tag_name = 'default'
-#
-#         if 'pk' in POST:
-#             pk = int(POST['pk'])
-#
-#             try:
-#                 tag = Tag.objects.get(pk=pk)
-#                 tag_name = tag.name
-#                 if not Game.objects.filter(tag=tag).exists():
-#                     messages.add_message(request, messages.INFO, "Tag `{}` delete success".format(tag_name))
-#                     #messages.success(request, "The object has been modified.")
-#                     tag.delete()
-#                     status = 'sucess'
-#                 else:
-#                     messages.add_message(request, messages.INFO, "Tag `{}` has games!".format(tag_name))
-#                     #messages.error(request, "The object was not modified.")
-#                     status = 'exist'
-#             except:
-#                 status = 'failed'
-#
-#             results = {'status': status, 'name': tag_name}
-#
-#         return JsonResponse(results)
+            if not Movie.objects.filter(tmdb_id=movie_pk).exists():
+                m = Movie()
+                m.tmdb_id = movie_pk
+                m.user = request.user
+                m.save()
+
+            movie = Movie.objects.get(tmdb_id=movie_pk)
+
+            if Tag.objects.filter(pk=tag_pk, movie__pk=movie.pk).exists():
+                tag.movie.remove(movie)
+                results = {'status': 'sucess_remove'}
+                return JsonResponse(results)
+            else:
+                tag.movie.add(movie)
+                results = {'status': 'sucess_add'}
+                return JsonResponse(results)
+
+            # todo Здесь можно запились функцию, проверяющую - если у фильма
+            # не осталось ни тэгов ни звезд - удалить его из базы
+
+@login_required
+@ensure_csrf_cookie
+def delete_tag_ajax(request):
+    """
+    AJAX
+    """
+    if request.is_ajax() and request.method == u'POST':
+        POST = request.POST
+        results = {}
+        tag_name = 'default'
+
+        if 'tagpk' in POST:
+            tagpk = int(POST['tagpk'])
+
+            try:
+                tag = Tag.objects.get(pk=tagpk)
+                tag_name = tag.name
+                if not Movie.objects.filter(tag=tag).exists():
+                    #messages.add_message(request, messages.INFO, "Tag `{}` delete success".format(tag_name))
+                    #messages.success(request, "The object has been modified.")
+                    tag.delete()
+                    status = 'sucess'
+                else:
+                    #messages.add_message(request, messages.INFO, "Tag `{}` has movies!".format(tag_name))
+                    #messages.error(request, "The object was not modified.")
+                    status = 'exist'
+            except:
+                status = 'failed'
+
+            results = {'status': status, 'name': tag_name,
+                       #'messages':django_messages
+                       }
+
+        return JsonResponse(results)
 
 
-# @login_required
-# @ensure_csrf_cookie
-# def add_tag_ajax(request):
-#     """
-#     AJAX
-#     """
-#     # if request.is_ajax() and request.method == u'POST':
-#     if request.method == u'POST':
-#         POST = request.POST
-#         tagpk = None
-#         results = {}
-#
-#         if 'tag_name' in POST:
-#             tag_name = str(POST['tag_name'])
-#
-#             try:
-#                 if not Tag.objects.filter(name=tag_name).exists():
-#                     tag = Tag.objects.create(name=tag_name, user=request.user)
-#                     tag.save()
-#                     messages.add_message(request, messages.INFO, 'tag {} creating success'.format(tag_name))
-#                     status = 'sucess'
-#                     tagpk = tag.pk
-#                 else:
-#                     messages.add_message(request, messages.WARNING, 'tag {} already exist'.format(tag_name))
-#                     status = 'exist'
-#             except:
-#                 status = 'failed'
-#
-#             results = {'status': status, 'name': tag_name, 'tagpk': tagpk}
-#
-#             return JsonResponse(results)
-#
-#     else:
-#         results = {'status': 'non-ajax', 'name': None}
-#         return JsonResponse(results)
+@login_required
+@ensure_csrf_cookie
+def add_tag_ajax(request):
+    """
+    AJAX
+    """
+    # if request.is_ajax() and request.method == u'POST':
+    if request.method == u'POST':
+        POST = request.POST
+        tagpk = None
+        results = {}
+
+        if 'tag_name' in POST:
+            tag_name = str(POST['tag_name'])
+
+            try:
+                if not Tag.objects.filter(name=tag_name).exists():
+                    tag = Tag.objects.create(name=tag_name, user=request.user)
+                    tag.save()
+                    # messages.add_message(request, messages.INFO, 'tag {} creating success'.format(tag_name))
+                    status = 'sucess'
+                    tagpk = tag.pk
+                else:
+                    # messages.add_message(request, messages.WARNING, 'tag {} already exist'.format(tag_name))
+                    status = 'exist'
+            except:
+                status = 'failed'
+
+            results = {'status': status, 'name': tag_name, 'tagpk': tagpk}
+
+            return JsonResponse(results)
+
+    else:
+        results = {'status': 'non-ajax', 'name': None}
+        return JsonResponse(results)

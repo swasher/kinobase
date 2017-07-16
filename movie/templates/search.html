@@ -1,46 +1,68 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "movie.css" %}">
+{% endblock %}
 
 {% block content %}
 
-<script>
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
-</script>
+<div class="row searchbar justify-content-center">
+    <form accept-charset="UTF-8" role="form" class="form-inline" action="{% url 'search' %}" method="post">
+        <div class="form-group">
+            {{ form.non_field_errors }}
+            {% csrf_token %}
+            <div class="form-group form-control-lg">
+                {# {{ form.movie.label_tag }}#}
+                {{ form.movie }}
+            </div>
 
-    
-
-<div class="container">
-
-    <div class="row searchbar">
-        <div class="col-md-8 col-md-offset-2" >
-            <form accept-charset="UTF-8" role="form" class="form-inline" action="{% url 'search' %}" method="post">
-                {{ form.non_field_errors }}
-                {% csrf_token %}
-                <div class="form-group">
-                    {# {{ form.movie.label_tag }}#}
-                    {{ form.movie }}
-                </div>
-{#                <button type="submit" class="btn btn-lg btn-success">Search</button>#}
-                <input class="btn btn-lg btn-success" type="submit" value="{% trans 'Search' %}">
-                {{ form.movie.errors }}
-            </form>
+            {{ form.movie.errors }}
         </div>
-    </div>
+        <input class="btn btn-lg btn-success" type="submit" value="{% trans 'Search' %}">
+    </form>
 </div>
 
 
 {% if movies %}
-{#<div class="container-fluid">#}
-    <table class="table table-bordered">
+    <div class="card-columns">
+
         {% for movie in movies %}
-            <a href="https://www.themoviedb.org/movie/{{ movie.id }}" class="tooltip">
-                <img src="{{ prefix }}{{ movie.poster_path }}" alt="cover">
-            </a>
+
+            <div class="card">
+
+        {#        HEADER    #}
+{#                    <div class="card-header">#}
+{#                        <h6>{{ movie.original_title }}</h6>#}
+{#                    </div>#}
+
+                <a href="{% url 'movie' movie.id %}"
+                   data-toggle="popover"
+                   title="{{ movie.title }} [{{ movie.release_date }}]"
+                   data-content="{{ movie.overview }}"
+                   style="white-space: nowrap;">
+                    <img class="img-fluid card-img-top"
+{#                         data-toggle="popover"#}
+{#                         data-content="And here's content"#}
+                         src="{{ prefix }}{{ movie.poster_path }}"
+                         alt=""
+                    >
+                </a>
+        {#   BODY OF CARD      #}
+        {#                <div class="card-block">#}
+
+        {#                <h4 class="card-title">{{ movie.original_title }}</h4>#}
+        {#                <p class="card-text">{{ movie.overview }}</p>#}
+
+        {#         FOOTER #}
+        {#                    <p class="card-text">#}
+        {#                        <small class="text-muted">{{ movie.original_title }}</small>#}
+        {#                    </p>#}
+        {#                </div>#}
+            </div>
         {% endfor %}
-    </table>
+    </div>
 {% endif %}
-{#</div>#}
 
 {% endblock %}

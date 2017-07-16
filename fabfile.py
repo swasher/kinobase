@@ -67,8 +67,8 @@ def create_django_superuser():
     Usage:
     fab create_django_superuser
     """
-    verbose = ''
-    #verbose += '-vvv'
+    #verbose = ''
+    verbose = '-vv'
     with lcd(env.project_path + 'provision'):
         local('ansible-playbook -i inventories/all --limit development {verbose} create_superuser.yml'
               .format(verbose=verbose))

@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
-    'taggit',
     'star_ratings',
     'anymail',
     'movie',

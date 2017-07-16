@@ -8,22 +8,41 @@
   tasks:
 
   - name: super user existed?
-    command: echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(email='{{superusername}}').count()>0)" | {{virtualenv}}/bin/python ./manage.py shell
+    command: bash -c "echo \"from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(email='{{superuseremail}}').count()>0)\" | {{virtualenv}}/bin/python ./manage.py shell"
     args:
       chdir: "{{project_root}}"
     environment:
       DJANGO_SETTINGS_MODULE: "{{settings}}"
     register: superuser_existed
 
+  - debug:
+      msg: "{{superuser_existed.stdout_lines}}"
+      verbosity: 2
+
+
+    # This suitable only when we change User model with USERNAME_FIELD = 'email'
+    # For usual User add `--username={{superusername}}`
+
+    # This do not work if code mapped to vagrant share (manage.py isn't executable)
+    #  - name: Create super user [with email as username]
+    #    django_manage:
+    #      command: createsuperuser --noinput --email='{{superuseremail}}'
+    #      app_path: "{{project_root}}"
+    #      virtualenv: "{{virtualenv}}"
+    #      settings: "cinemaset.settings"
+    #    #args:
+    #    #  chdir: "{{project_root}}"
+    #    environment:
+    #      DJANGO_SETTINGS_MODULE: "{{settings}}"
+    #    when: not superuser_existed.stdout_lines|bool
 
   - name: Create super user [with email as username]
-    # This suit when we change User model with USERNAME_FIELD = 'email'
-    # For usual User add `--username={{superusername}}`
-    django_manage: command="createsuperuser --noinput --email={{superuseremail}}"
-                   app_path={{project_root}}
-                   virtualenv={{virtualenv}}
-                   settings={{settings}}
-    when: not superuser_existed
+    shell: source {{virtualenv}}/bin/activate && python manage.py createsuperuser --noinput --email='{{superuseremail}}'
+    args:
+      chdir:  "{{project_root}}"
+      executable: /bin/bash
+    when: not superuser_existed|bool
+
 
   - name: Install expect
     apt:
@@ -34,17 +53,15 @@
       - expect
     become: yes
 
-#  - name: Change password tricks
-#    template: src=changepassword.sh.j2 dest={{project_root}}/changepassword.sh mode=0755
 
-  - name: Change password tricks
+  - name: Change password tricks. Using email instead name.
     # you change permission for script in vagrant share folder, so let's use /tmp
     blockinfile:
       path: "/tmp/changepassword.sh"
       block: |
         #!/usr/bin/expect
         set timeout -1;
-        spawn {{virtualenv}}/bin/python manage.py changepassword {{superusername}};
+        spawn {{virtualenv}}/bin/python manage.py changepassword {{superuseremail}};
         expect {
             "Password:" { exp_send "{{superuserpassword}}\r" ; exp_continue }
             "Password (again):" { exp_send "{{superuserpassword}}\r" ; exp_continue }
