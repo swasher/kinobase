@@ -30,7 +30,7 @@
         <div class="card-header">
             Твои теги
         </div>
-        <div class="card-block jqueryconfirm-parent" id="tag-block">
+        <div class="card-block jquery-confirm-delete" id="tag-block">
             {% if tags %}
                 {% for tag in tags %}
                     <span id="{{ tag.pk }}" class="badge badge-default badge px-2">
@@ -38,7 +38,7 @@
                             <a href="#" tabindex="-1">
                                <i data-tag-pk="{{ tag.pk }}"
                                   data-tag-name="{{ tag.name }}"
-                                  class="jqueryconfirm fa fa-times" aria-hidden="true"></i>
+                                  class="fa fa-times" aria-hidden="true"></i>
                             </a>
                     </span>
                 {% endfor %}

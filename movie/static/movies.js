@@ -219,7 +219,7 @@ $(document).ready(function () {
     // теги не будет иметь хандлера удаления на крестике. Поэтому хадлер висит на объекте-родителе, и при клике
     // мы проверяем, на каком элементе был клик, и уже тогда выполняем удаление соотв. тега.
     //
-    $('.jqueryconfirm-parent').on('click', function () {
+    $('.jquery-confirm-delete').on('click', function () {
 
         var target = event.target;
 
@@ -228,9 +228,7 @@ $(document).ready(function () {
 
         var tagpk = $(target).attr('data-tag-pk');
         var tagname = $(target).attr('data-tag-name');
-        // var tagobj = $(this).closest('span.badge');
         var tagobj = $("span#" + tagpk);
-        // var tagobj = $(target);
 
         $.confirm({
             title: 'Deleting "' + tagname + '" tag',
