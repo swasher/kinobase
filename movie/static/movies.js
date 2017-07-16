@@ -157,6 +157,7 @@ $(document).ready(function () {
         create_tag()
     });
 
+/*
     // Confirmation for delete tag
     //
     $('.jqueryconfirm').on('click', function () {
@@ -201,11 +202,6 @@ $(document).ready(function () {
                                 closeSnoAlertBox();
                             })
                             .fail(function () {
-                                // $("#snoAlertBox")
-                                //     .addClass("alert-danger")
-                                //     .text('Вы должны авторизироваться.')
-                                //     .fadeIn();
-                                // closeSnoAlertBox();
                                 alert('fail')
                             });
                     }
@@ -214,6 +210,73 @@ $(document).ready(function () {
             }
         })
     })
+*/
+
+
+    // Confirmation for delete tag
+    //
+    // Мы мспользуем Event delegation (https://learn.javascript.ru/event-delegation), иначе только что созданные
+    // теги не будет иметь хандлера удаления на крестике. Поэтому хадлер висит на объекте-родителе, и при клике
+    // мы проверяем, на каком элементе был клик, и уже тогда выполняем удаление соотв. тега.
+    //
+    $('.jqueryconfirm-parent').on('click', function () {
+
+        var target = event.target;
+
+        // Нужно кликнуть по элементу I (крестику), чтобы выполнить удаление тега
+        if (target.tagName !== 'I') return;
+
+        var tagpk = $(target).attr('data-tag-pk');
+        var tagname = $(target).attr('data-tag-name');
+        // var tagobj = $(this).closest('span.badge');
+        var tagobj = $("span#" + tagpk);
+        // var tagobj = $(target);
+
+        $.confirm({
+            title: 'Deleting "' + tagname + '" tag',
+            content: 'Are you sure?',
+            buttons: {
+                confirm: {
+                    text: 'Delete',
+                    btnClass: 'btn-danger',
+                    action: function () {
+                        $.ajax({
+                            url: '/delete_tag_ajax/',
+                            type: 'POST',
+                            data: {tagpk: tagpk},
+                            dataType: 'json'
+                        })
+                            .done(function (json) {
+                                if (json['status'] == 'sucess') {
+                                    tagobj.empty();
+                                    update_messages(json['messages']);
+                                    $("#snoAlertBox")
+                                        .removeClass('alert-danger')
+                                        .addClass("alert-success")
+                                        .text('Список ' + json['name'] + ' успешно удален')
+                                        .fadeIn();
+                                    console.log('DELETE tag: success')
+                                } else if (json['status'] == 'exist') {
+                                    $("#snoAlertBox")
+                                        .removeClass("alert-success")
+                                        .addClass("alert-danger")
+                                        .text('Список ' + json['name'] + ' не может быть удален - он содержит фильмы!')
+                                        .fadeIn();
+                                    console.log('DELETE tag: reject')
+                                }
+                                closeSnoAlertBox();
+                            })
+                            .fail(function () {
+                                alert('fail')
+                            });
+                    }
+                },
+                cancel: function () {
+                }
+            }
+        })
+    })
+
 
     // DEPRECATED: BOOTSTRAP-CONFIRMATION2
     //

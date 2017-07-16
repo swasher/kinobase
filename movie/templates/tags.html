@@ -30,7 +30,7 @@
         <div class="card-header">
             Твои теги
         </div>
-        <div class="card-block">
+        <div class="card-block jqueryconfirm-parent" id="tag-block">
             {% if tags %}
                 {% for tag in tags %}
                     <span id="{{ tag.pk }}" class="badge badge-default badge px-2">
