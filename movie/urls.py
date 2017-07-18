@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^toggle_tag_ajax/$', views.toggle_tag_ajax, name='toggle_tag_ajax'),
     url(r'^delete_tag_ajax/$', views.delete_tag_ajax, name='delete_tag_ajax'),
     url(r'^add_tag_ajax/$', views.add_tag_ajax, name='add_tag_ajax'),
+    url(r'^notice_edit_ajax/$', views.notice_edit_ajax, name='notice_edit_ajax'),
 ]

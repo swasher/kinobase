@@ -1,4 +1,47 @@
-#card-movies-list {
+#tag-buttons-panel {
         margin-bottom: 1rem;
         margin-top: 1rem;
 }
+
+.movie-card {
+    width: 100px;
+}
+
+.grid-poster {
+        /*width: 158px;*/
+        /*height: 231px;*/
+        width: 182px;
+        height: 267px;
+}
+
+/*.card-img-top {*/
+        /*width: 20px;*/
+/*}*/
+
+.pag {
+    margin-top: 1rem;
+}
+
+.movie-card > .card-block {
+    padding: 2px;
+}
+
+.movie-title {
+    line-height: 0.1rem;
+}
+
+
+/*3e3e*/
+
+/*.card-deck {*/
+    /*display: flex;*/
+    /*justify-content: flex-start;*/
+    /*flex-flow: row wrap;*/
+    /*align-items: stretch;*/
+/*}*/
+
+/*.card-deck .card {*/
+    /*display: block;*/
+    /*flex-basis: 150px; !* change this value for each breakpoint*!*/
+/*}*/
+

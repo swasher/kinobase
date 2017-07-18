@@ -3,75 +3,71 @@
 <head>
 
     <!-- meta -->
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="Description" lang="ru" content="Place for all your movies is there">
-  <meta name="author" content="Swasher">
-  <meta name="robots" content="index, follow">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Description" lang="ru" content="Place for all your movies is there">
+    <meta name="author" content="Swasher">
+    <meta name="robots" content="index, follow">
 
-  {% block meta %}{% endblock %}
+    {% block meta %}{% endblock %}
 
     <!-- load django template tag -->
-  {% load static %}
-  {% load admin_urls %}
+    {% load static %}
+    {% load admin_urls %}
 
-    <!-- bootsrap and jquery -->
-    {# == V3 == #}
-    {#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">#}
-    {#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/slate/bootstrap.min.css">#}
-    {# == V4 == #}
+    <!-- JQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Bootsrap v4 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     {#    <link rel="stylesheet" href="https://cdn.rawgit.com/thomaspark/bootswatch/v4/solar/bootstrap.min.css">#}
     <link rel="stylesheet" href="https://cdn.rawgit.com/thomaspark/bootswatch/v4/slate/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
-    <!-- JQuery-->
-    <!-- Jquery must load in prior at all due dependency in templates-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 
     <!-- jquery-confirm -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.js"></script>
 
-
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-            crossorigin="anonymous"></script>
+    <!-- other loads -->
     <script src="https://cdn.rawgit.com/Krinkle/jquery-json/23398043/dist/jquery.json.min.js"></script>
     <script src="https://cdn.rawgit.com/IonDen/ion.sound/master/js/ion.sound.min.js"></script>
     <script src="https://use.fontawesome.com/4e089d5a4d.js"></script>
 
-    {#    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.js"></script>#}
+    <!-- X-editable, github, jquery UI version -->
+    {% comment %}    <link href="https://cdn.rawgit.com/vitalets/x-editable/develop/dist/jqueryui-editable/css/jqueryui-editable.css" rel="stylesheet"/>
+    <script>$.fn.poshytip = {defaults: null}</script>
+    <script src="https://cdn.rawgit.com/vitalets/x-editable/develop/dist/jqueryui-editable/js/jqueryui-editable.min.js"></script>{% endcomment %}
+
+    <!-- X-editable, github, pure jquery version -->
+    {% comment %} <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css"
+          rel="stylesheet"/>
+    <script>$.fn.poshytip = {defaults: null}</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>{% endcomment %}
 
     <!-- Own CSS and JS -->
     <link rel="stylesheet" href="{% static "main.css" %}">
     <script src="{% static "csfr_ajax.js" %}"></script>
     <script src="{% static "movies.js" %}"></script>
+    <script src="{% static "inline-edit.js" %}"></script>
     {% block css %}{% endblock %}
     {% block js %}{% endblock %}
 
 
-    <!-- bootstrap-confirmation deprecated due incompatible with Bootstrap 4 -->
-    {#        <script src="https://cdn.rawgit.com/mistic100/Bootstrap-Confirmation/15759685/bootstrap-confirmation.min.js"></script>#}
-
-
-
-  <!-- Favicons -->
-  <link rel="shortcut icon" type="image/png" href="{% static "favicons/favicon.ico" %}"/>
-  <title>Cinema[set] *** private movies collection</title>
+    <!-- Favicons -->
+    <link rel="shortcut icon" type="image/png" href="{% static "favicons/favicon.ico" %}"/>
+    <title>Cinema[set] *** private movies collection</title>
 
 </head>
 
-<body>
+<body class="d-flex flex-column">
 
     <div id="snoAlertBox" class="alert" data-alert="alert"></div>
 
-    <div class="container">
+    <div class="container flex-grow">
         {% include "navbar.html" %}
 
         {% include "django_messages.html" %}
@@ -81,9 +77,6 @@
     </div>
 
     {% include "footer.html" %}
-
-
-
 
 </body>
 </html>

@@ -15,71 +15,74 @@
         </div>
     </div>
 
+{#    <div class="card" id="card-movies-list">#}
+{#        <div class="card-block">#}
 
-    <div class="card" id="card-movies-list">
-        <div class="card-block">
+{#<div class="card-group">#}
+    {% for movie in movies %}
 
-            <div class="card-deck">
-                {% for movie in movies %}
+{#        <div class="card movie-card  " style="width: 20rem;">#}
+{#            col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1#}
 
-                    <div class="card">
+            {#        HEADER    #}
+            {#                    <div class="card-header">#}
+            {#                        <h6>{{ movie.original_title }}</h6>#}
+            {#                    </div>#}
 
-                    {#        HEADER    #}
-                    {#                    <div class="card-header">#}
-                    {#                        <h6>{{ movie.original_title }}</h6>#}
-                    {#                    </div>#}
+                <a href="{% url 'movie' movie.id %}"
+                   data-toggle="popover"
+                   title="{{ movie.title }} [{{ movie.release_date }}]"
+                   data-content="{{ movie.overview }}"
+                   style="white-space: nowrap;">
+                    <img class="img-fluid  grid-poster"
+                            {#                         data-toggle="popover"#}
+                            {#                         data-content="And here's content"#}
+                         src="{{ prefix }}{{ movie.poster_path }}"
+                         alt=""
+                    >
+                </a>
+            {#   BODY OF CARD      #}
+            {% comment %}
+                            <div class="card-block">
+                                <p class="card-text">{{ movie.original_title }}</p>
+                                <small class="text-muted movie-title">{{ movie.original_title }}</small>
+                            </div>
+            {% endcomment %}
 
-                        <a href="{% url 'movie' movie.id %}"
-                           data-toggle="popover"
-                           title="{{ movie.title }} [{{ movie.release_date }}]"
-                           data-content="{{ movie.overview }}"
-                           style="white-space: nowrap;">
-                            <img class="img-fluid card-img-top"
-                                    {#                         data-toggle="popover"#}
-                                    {#                         data-content="And here's content"#}
-                                 src="{{ prefix }}{{ movie.poster_path }}"
-                                 alt=""
-                            >
-                        </a>
-                    {#   BODY OF CARD      #}
-                    {#                <div class="card-block">#}
+            {#         FOOTER #}
+            {% comment %}                <div class="card-footer">
+                                <small class="text-muted">{{ movie.original_title }}</small>
+                            </div>{% endcomment %}
 
-                    {#                <h4 class="card-title">{{ movie.original_title }}</h4>#}
-                    {#                <p class="card-text">{{ movie.overview }}</p>#}
 
-                    {#         FOOTER #}
-                    {#                    <p class="card-text">#}
-                    {#                        <small class="text-muted">{{ movie.original_title }}</small>#}
-                    {#                    </p>#}
-                    {#                </div>#}
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
+{#        </div>#}
+    {% endfor %}
+{#</div>#}
+{#    </div>#}
+{#</div>#}
 
-<div class="row justify-content-center">
+<div class="row justify-content-center pag">
     {% if movies.has_other_pages %}
         <ul class="pagination">
             {% if movies.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ movies.previous_page_number }}">&laquo;Previous</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ movies.previous_page_number }}">&laquo;</a></li>
             {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&laquo;Previous</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&laquo;</a></li>
             {% endif %}
 
             {% for i in movies.paginator.page_range %}
                 {% if movies.number == i %}
-                    <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+                    <li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }} <span class="sr-only">(current)</span></a></li>
                 {% else %}
 {#                    <li><a href="?page={{ i }}">{{ i }}</a></li>#}
-                    <li class="page-item"><a class="page-link" href="#">{{ i }}</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
 
             {% if movies.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ movies.next_page_number }}">Next&raquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ movies.next_page_number }}">&raquo;</a></li>
             {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Next&raquo;</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&raquo;</a></li>
             {% endif %}
         </ul>
     {% endif %}

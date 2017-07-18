@@ -92,10 +92,18 @@ def search(request):
 
 @login_required
 def movie(request, tmdbid):
+    """
+    Нужно понимать, что мы переменная movie, которая передается в темплейт, это dict, а не объект типа Movie,
+    потому что у нас в базе не хранятся данные о фильмах.
+    :param request:
+    :param tmdbid: int, номер по tmdb.com
+    :return: m         - объект db Movie (из него в темплейте нужны мой рейтинг, лайки и т.д)
+             moviedata - объект Movies из tmdbsimple (данные о фильме)
+    """
 
     tmdb.API_KEY = settings.TMDB_API_KEY
-    movie = tmdb.Movies(tmdbid)
-    response = movie.info(language='ru-RU')
+    moviedata = tmdb.Movies(tmdbid)
+    response = moviedata.info(language='ru-RU')
 
     # TODO надо избавиться от частых вызовов (код в search) и либо обновлять эти, по сути, константы, изредка, или
     # вобще их в settings прописать
@@ -103,9 +111,10 @@ def movie(request, tmdbid):
     poster_size = 'w500'
     prefix = base_url + poster_size
 
-    # Получаем список списков, присвоенных данному фильму: <QuerySet ['tag2', 'tag5']>
+    m = Movie.objects.get(tmdb_id=tmdbid)
+
+    # Получаем список тегов, присвоенных данному фильму: <QuerySet ['tag2', 'tag5']>
     if Movie.objects.filter(tmdb_id=tmdbid).exists():
-        m = Movie.objects.get(tmdb_id=tmdbid)
         active_tag_list = list(Tag.objects.filter(user=request.user, movie=m).values_list('name', flat=True))
     else:
         active_tag_list = []
@@ -124,7 +133,7 @@ def movie(request, tmdbid):
         else:
             tag['active'] = False
 
-    return render(request, 'movie.html', {'movie': movie, 'prefix': prefix, 'tag_list': tag_list})
+    return render(request, 'movie.html', {'m':m, 'moviedata': moviedata, 'prefix': prefix, 'tag_list': tag_list})
 
 
 @login_required
@@ -143,30 +152,31 @@ def movies(request, tag=None):
         movie_list = Movie.objects.filter(user=user)
 
     # В базе у нас содержаться только ID, поэтому мы должны вытащить инфу из TMDB и уже ее передать в темплейт
-    tmdb.API_KEY = settings.TMDB_API_KEY
+    # Сначала создаем просто список по кол-ву всех фильмов у юзера, содержащий только id
     tmdb_movies = []
     for m in movie_list:
-        #movie = tmdb.Movies(m.tmdb_id)
-        #response = movie.info(language='ru-RU')
         tmdb_movies.append(dict(id=m.tmdb_id))
 
-    paginator = Paginator(tmdb_movies, 6)  # Show N movies per page
+    # Пагинатор работает у нас со списком фильмов, который еще не имеет никаких данных, кроме id
+    paginator = Paginator(tmdb_movies, 12)  # Show N movies per page
     page = request.GET.get('page', 1)
     try:
-        tmdb_movies_paginator = paginator.page(page)
+        movies_paginator = paginator.page(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
-        tmdb_movies_paginator = paginator.page(1)
+        movies_paginator = paginator.page(1)
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
-        tmdb_movies_paginator = paginator.page(paginator.num_pages)
+        movies_paginator = paginator.page(paginator.num_pages)
 
-    for m in tmdb_movies_paginator.object_list:
+    # После пагинации вытаскиваем из TMDB инфу только для фильмов, которые отобразятся на текущей странице пагинации
+    tmdb.API_KEY = settings.TMDB_API_KEY
+    for m in movies_paginator.object_list:
         movie = tmdb.Movies(m['id'])
         response = movie.info(language='ru-RU')
         m.update(response)
 
-    return render(request, 'movies.html', {'movies': tmdb_movies_paginator, 'prefix': prefix, 'tags':tags})
+    return render(request, 'movies.html', {'movies': movies_paginator, 'prefix': prefix, 'tags':tags})
 
 
 #
@@ -240,6 +250,32 @@ def tags(request):
 
 @login_required
 @ensure_csrf_cookie
+def notice_edit_ajax(request):
+    """
+    AJAX
+    """
+    if request.is_ajax() and request.method == u'POST':
+        POST = request.POST
+        if 'tmdb_id' in POST and 'text' in POST:
+            tmdb_id = int(POST['tmdb_id'])
+            text = str(POST['text'])
+            try:
+                movie = Movie.objects.get(tmdb_id=tmdb_id)
+                movie.notice = text
+                movie.save()
+
+
+                m = Movie.objects.get(tmdb_id=tmdb_id)
+                actual_text = m.notice
+                results = {'status': 'sucess', 'actual_text': actual_text}
+
+            except Exception as e:
+                results = {'status': e}
+            return JsonResponse(results)
+
+
+@login_required
+@ensure_csrf_cookie
 def toggle_tag_ajax(request):
     """
     AJAX
@@ -270,6 +306,7 @@ def toggle_tag_ajax(request):
 
             # todo Здесь можно запились функцию, проверяющую - если у фильма
             # не осталось ни тэгов ни звезд - удалить его из базы
+
 
 @login_required
 @ensure_csrf_cookie

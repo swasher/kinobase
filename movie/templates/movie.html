@@ -5,40 +5,11 @@
     <link rel="stylesheet" href="{% static "movie.css" %}">
 {% endblock %}
 
-{% block js %}
-<script type="text/javascript">
-    $(function () {
-
-        var movie_pk = "{{ movie.pk }}";
-
-        $(".button_delete").confirm({
-            title: 'What is up?',
-            content: 'Here goes a little content',
-            type: 'green',
-            buttons: {
-                ok: {
-                    text: "ok!",
-                    btnClass: 'btn-primary',
-                    keys: ['enter'],
-                    action: function () {
-                        console.log('the user clicked confirm');
-                    }
-                },
-                cancel: function () {
-                    console.log('the user clicked cancel');
-                }
-            }
-        });
-
-    })
-</script>
-{% endblock %}
-
 {% block content %}
 
 <div class="row">
     <div class="col">
-        <img src="{{ prefix }}{{ movie.poster_path }}" alt="" >
+        <img src="{{ prefix }}{{ moviedata.poster_path }}" alt="" >
     </div>
 
     <div class="col">
@@ -47,7 +18,7 @@
                 <div class="card-block">
                     {% for tag in tag_list %}
                         <span id="{{ tag.pk }}"
-                              onclick="toggle_tag_ajax({{ movie.id }}, {{ tag.pk }})"
+                              onclick="toggle_tag_ajax({{ moviedata.id }}, {{ tag.pk }})"
                               class="tag-toggle badge badge-default label-pointer-cursor
                               {% if tag.active %} badge-success {% else %} badge-default {% endif %}"
                         >{{ tag.name }}</span>
@@ -58,22 +29,37 @@
             </div>
         {% endif %}
 
+
         <table class="table table-bordered">
-            <tr><td>Title</td><td>{{ movie.title }} [{{ movie.original_title }}]</td></tr>
-            <tr><td>overview</td><td>{{ movie.overview }}</td></tr>
-            <tr><td>Release date</td><td>{{ movie.release_date }}</td></tr>
-            <tr><td>Notice</td><td>{{ movie.notice }}</td></tr>
+            <tr><td>Title</td><td>
+                <h4>{{ moviedata.title }}<br>
+                    <small class="text-muted">{{ moviedata.original_title }}</small>
+                </h4>
+            </td></tr>
+            <tr><td>Overview</td><td>{{ moviedata.overview }}</td></tr>
+            <tr><td>Release date</td><td>{{ moviedata.release_date }}</td></tr>
+            <tr><td>Notice</td><td>
+
+            {% csrf_token %}
+            <p id='note-movie' data-movie-id='{{ m.tmdb_id }}' contenteditable="true">
+                {% if m.notice %}{{ m.notice }}{% else %}click to edit{% endif %}
+            </p>
+
+            </td>
+            </tr>
+
+
             <tr><td>Link</td>
                 <td><span class="badge badge-info">
-                        <a href="https://www.themoviedb.org/movie/{{ movie.id }}">TMDB</a>
+                        <a href="https://www.themoviedb.org/movie/{{ moviedata.id }}">TMDB</a>
                     </span>
-                    <span class="badge badge-info">
+                    <span class="badge badge-default">
                         <a href="#">IMDB</a>
                     </span>
-                    <span class="badge badge-info">
+                    <span class="badge badge-default">
                         <a href="#">Kinopoisk</a>
                     </span>
-                    <span class="badge badge-info">
+                    <span class="badge badge-default">
                         <a href="#">Letterboxd</a>
                     </span>
                 </td></tr>
@@ -82,7 +68,7 @@
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group" role="group" aria-label="First group">
                 <button id="{{ movie.pk }}" type="button" class="btn btn-danger btn-sm button_delete">
-                    <i class="fa fa-trash" aria-hidden="true"></i> DELETE {наверное это не нужно}
+                    <i class="fa fa-trash" aria-hidden="true"></i> DELETE <small>[not implement yet]</small>
                 </button>
             </div>
             <div class="input-group">

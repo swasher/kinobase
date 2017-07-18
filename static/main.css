@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans');
 
-html {
-    height: 100%;
+
+.flex-grow {
+    flex: 1;
 }
 
 body {
-    /* Отступ, чтобы футер не залезал на хедер (если футер - sticky) */
-    margin-bottom: 60px;
-    height: 100%;
+    min-height: 100vh;
 }
 
 .container {
     max-width: 1200px;
     height: 100%;
-    margin-bottom: 60px;
+    /*margin-bottom: 60px; футер */
+    /*padding: 0 15px; футер */
 }
 
 .navbar-toggleable-md {
@@ -32,10 +32,6 @@ body {
     vertical-align: middle;
 }
 
-/*.sidebar, .content{*/
-    /*min-height:300px*/
-/*}*/
-
 h2 {
     margin:0;
     color:#666
@@ -44,17 +40,13 @@ h2 {
 
 /* Custom page footer */
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    color: dimgray;
-    text-align: center !important;
-    /* Set the fixed height of the footer here */
     height: 60px;
-    line-height: 60px; /* Vertically center the text there */
-    background-color: #272B30;
+    /*line-height: 60px;    !*Vertically center the text there */
+    text-align: center !important;  /* Horizontrally align */
+    color: dimgray;
+    /*background-color: #272B30;*/
+    background-color: #202024;
 }
-
 
 .label-pointer-cursor {
     cursor: pointer;
