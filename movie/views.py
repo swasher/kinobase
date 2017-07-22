@@ -145,6 +145,7 @@ def movies(request, tag=None):
     user = request.user
     tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
 
+    # Если вьюха была вызвана пользователем путем нажатия на тэг, то ответ фильтруется по тэгу
     if tag:
         tag = int(tag)
         movie_list = Movie.objects.filter(user=user, tag__pk=tag)
@@ -152,11 +153,12 @@ def movies(request, tag=None):
         movie_list = Movie.objects.filter(user=user)
 
     # В базе у нас содержаться только ID, поэтому мы должны вытащить инфу из TMDB и уже ее передать в темплейт
-    # Сначала создаем просто список по кол-ву всех фильмов у юзера, содержащий только id
+    # Сначала создаем просто список по кол-ву всех фильмов у юзера, содержащий только tmdb_id
     tmdb_movies = []
     for m in movie_list:
         tmdb_movies.append(dict(id=m.tmdb_id))
 
+    # Далее формируем пагинатор - ДО того, как вытаскивем инфу о фильмах, для уменьшения кол-ва запросов к TheMovieDB
     # Пагинатор работает у нас со списком фильмов, который еще не имеет никаких данных, кроме id
     paginator = Paginator(tmdb_movies, 12)  # Show N movies per page
     page = request.GET.get('page', 1)
@@ -178,24 +180,6 @@ def movies(request, tag=None):
 
     return render(request, 'movies.html', {'movies': movies_paginator, 'prefix': prefix, 'tags':tags})
 
-
-#
-# DEPRECATED
-# Не надо никаого add!!! Когда юзер добавляет фильм в список, он должен автоматически "добавляться"
-#
-# @login_required
-# @ensure_csrf_cookie
-# def add_movie(request, igdb_id):
-#
-#     if not Movie.objects.filter(igdb_id=igdb_id).exists():
-#
-#         movie = Movie()
-#         movie.igdb_id = igdb_id
-#         movie.user = request.user
-#         movie.date_add = datetime.datetime.now()
-#         movie.save()
-#
-#     return redirect('/game/{}'.format(movie.id))
 
 
 @login_required
@@ -250,22 +234,67 @@ def tags(request):
 
 @login_required
 @ensure_csrf_cookie
+def toggle_heart_state(request):
+    """
+    AJAX
+    """
+    results = {'status': 'error'}
+    if request.is_ajax() and request.method == u'POST':
+        POST = request.POST
+        if 'movie_pk' in POST:
+            movie_pk = int(POST['movie_pk'])
+
+            movie = Movie.objects.get(pk=movie_pk)
+            state_after_click = movie.toggle_heart()
+
+            if state_after_click:
+                results = {'status': 'switch_on'}
+            else:
+                results = {'status': 'switch_off'}
+
+    return JsonResponse(results)
+
+
+@login_required
+@ensure_csrf_cookie
+def toggle_like_state(request):
+    """
+    AJAX
+    """
+    results = {'status': 'error'}
+    if request.is_ajax() and request.method == u'POST':
+        POST = request.POST
+        if 'movie_pk' in POST and 'button' in POST:
+            movie_pk = int(POST['movie_pk'])
+            button = str(POST['button'])
+
+            movie = Movie.objects.get(pk=movie_pk)
+            # state after click:
+            like, dislike = movie.toggle_like(button)
+
+            results = {'status':'success', 'like':like, 'dislike':dislike}
+
+    return JsonResponse(results)
+
+
+@login_required
+@ensure_csrf_cookie
 def notice_edit_ajax(request):
     """
     AJAX
     """
     if request.is_ajax() and request.method == u'POST':
         POST = request.POST
-        if 'tmdb_id' in POST and 'text' in POST:
-            tmdb_id = int(POST['tmdb_id'])
+        if 'movie_pk' in POST and 'text' in POST:
+            movie_pk = int(POST['movie_pk'])
             text = str(POST['text'])
             try:
-                movie = Movie.objects.get(tmdb_id=tmdb_id)
+                movie = Movie.objects.get(pk=movie_pk)
                 movie.notice = text
                 movie.save()
 
 
-                m = Movie.objects.get(tmdb_id=tmdb_id)
+                m = Movie.objects.get(pk=movie_pk)
                 actual_text = m.notice
                 results = {'status': 'sucess', 'actual_text': actual_text}
 
@@ -287,13 +316,13 @@ def toggle_tag_ajax(request):
             movie_pk = int(POST['movie_pk'])
             tag = Tag.objects.get(pk=tag_pk)
 
-            if not Movie.objects.filter(tmdb_id=movie_pk).exists():
+            if not Movie.objects.filter(pk=movie_pk).exists():
                 m = Movie()
                 m.tmdb_id = movie_pk
                 m.user = request.user
                 m.save()
 
-            movie = Movie.objects.get(tmdb_id=movie_pk)
+            movie = Movie.objects.get(pk=movie_pk)
 
             if Tag.objects.filter(pk=tag_pk, movie__pk=movie.pk).exists():
                 tag.movie.remove(movie)

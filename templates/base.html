@@ -37,17 +37,6 @@
     <script src="https://cdn.rawgit.com/IonDen/ion.sound/master/js/ion.sound.min.js"></script>
     <script src="https://use.fontawesome.com/4e089d5a4d.js"></script>
 
-    <!-- X-editable, github, jquery UI version -->
-    {% comment %}    <link href="https://cdn.rawgit.com/vitalets/x-editable/develop/dist/jqueryui-editable/css/jqueryui-editable.css" rel="stylesheet"/>
-    <script>$.fn.poshytip = {defaults: null}</script>
-    <script src="https://cdn.rawgit.com/vitalets/x-editable/develop/dist/jqueryui-editable/js/jqueryui-editable.min.js"></script>{% endcomment %}
-
-    <!-- X-editable, github, pure jquery version -->
-    {% comment %} <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css"
-          rel="stylesheet"/>
-    <script>$.fn.poshytip = {defaults: null}</script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>{% endcomment %}
-
     <!-- Own CSS and JS -->
     <link rel="stylesheet" href="{% static "main.css" %}">
     <script src="{% static "csfr_ajax.js" %}"></script>
@@ -70,7 +59,7 @@
     <div class="container flex-grow">
         {% include "navbar.html" %}
 
-        {% include "django_messages.html" %}
+        {% include "messages.html" %}
         {% block title %}    {% endblock %}
         {% block content %}  {% endblock %}
 

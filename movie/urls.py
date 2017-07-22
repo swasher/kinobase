@@ -18,4 +18,6 @@ urlpatterns = [
     url(r'^delete_tag_ajax/$', views.delete_tag_ajax, name='delete_tag_ajax'),
     url(r'^add_tag_ajax/$', views.add_tag_ajax, name='add_tag_ajax'),
     url(r'^notice_edit_ajax/$', views.notice_edit_ajax, name='notice_edit_ajax'),
+    url(r'^toggle_heart_state/$', views.toggle_heart_state, name='toggle_heart_state'),
+    url(r'^toggle_like_state/$', views.toggle_like_state, name='toggle_like_state'),
 ]

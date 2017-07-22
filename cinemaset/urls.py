@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^', include('accounts.urls')),
     url(r'^', include('movie.urls')),
+    url(r'^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

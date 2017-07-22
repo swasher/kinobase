@@ -1,7 +1,7 @@
 function addMessage(text, extra_tags) {
-    var message = $('<li class="' + extra_tags + '">' + text + '</li>').hide();
+    var message = $('<li class="alert alert-' + extra_tags + '">' + text + '</li>').hide();
     $("#messages").append(message);
-    message.fadeIn(500);
+    message.fadeIn(1000);
 
     setTimeout(function () {
         message.fadeOut(500, function () {
@@ -86,6 +86,64 @@ function update_messages(messages) {
     })
 }
 
+function toggle_heart_state(button) {
+    movie_pk = $(button).parent().parent().attr("data-moviepk");
+
+    $.ajax({
+        url: '/toggle_heart_state/',
+        data: {'movie_pk': movie_pk},
+        dataType: 'json',
+        method: 'POST',
+        success: function (json) {
+            if (json.status === 'switch_on') {
+                // switch button on
+                $(button).removeClass('btn-outline-secondary').addClass('btn-danger');
+                $.ionSound.play("water_droplet");
+            } else if (json.status === 'switch_off') {
+                // switch button off
+                $(button).removeClass('btn-danger').addClass('btn-outline-secondary');
+                $.ionSound.play("water_droplet");
+            } else if (json.status === 'error') {
+                addMessage('error!', 'danger')
+            }
+        }
+    });
+}
+
+
+function toggle_like_state(button) {
+    var movie_pk = $(button).parent().parent().attr("data-moviepk");
+    var buttonid = $(button).attr("id");
+
+    //var likebutton = document.getElementById('like');
+    //var dislikebutton = document.getElementById('dislike');
+    var likebutton = $('#like');
+    var dislikebutton = $('#dislike');
+
+    $.ajax({
+        url: '/toggle_like_state/',
+        data: {'movie_pk': movie_pk, 'button': buttonid},
+        dataType: 'json',
+        method: 'POST',
+        success: function (json) {
+            if (json.status === 'success')
+                if (json.like)
+                    $(likebutton).removeClass('btn-outline-secondary').addClass('btn-success');
+                else
+                    $(likebutton).removeClass('btn-success').addClass('btn-outline-secondary');
+
+                if (json.dislike)
+                    $(dislikebutton).removeClass('btn-outline-secondary').addClass('btn-success');
+                else
+                    $(dislikebutton).removeClass('btn-success').addClass('btn-outline-secondary');
+
+                // $(button).removeClass('btn-outline-secondary').addClass('btn-danger');
+                $.ionSound.play("water_droplet");
+
+        }
+    });
+}
+
 
 $(document).ready(function () {
 
@@ -127,35 +185,20 @@ $(document).ready(function () {
     //
     $("#note-movie").blur(function () {
         var frm = $('#note-movie');
-        var tmdb_id = frm.attr('data-movie-id');
+        var movie_pk = frm.attr('data-movie-pk');
         var text = frm.html();
-        console.log(text);
-        console.log(tmdb_id);
 
         $.ajax({
             url: '/notice_edit_ajax/',
-            data: {'tmdb_id': tmdb_id, 'text': text},
+            data: {'movie_pk': movie_pk, 'text': text},
             dataType: 'json',
             method: 'POST'
         }).done(function (json) {
             console.log(json['status']);
             console.log(json['actual_text']);
+            addMessage('Notice changed to: '+json['actual_text'], 'success')
         })
     });
-
-    //
-    // Handler for X-Editable (for edit notice)
-    //
-    // $('#editnotice').editable({
-    //     url: 'http://www.mysite.com/cgi-bin/art/my-store.cgi',
-    //     onblur: "submit",
-    //     placeholder: "Click to set a custom URL",
-    //     emptytext: "Click to set a custom URL",
-    //     params: {action: "update_store_url"},
-    //     success: function (response, newValue) {
-    //         $('#store-editible-url').editable('setValue', "foo", true);
-    //     }
-    // });
 
 
     //
@@ -177,10 +220,41 @@ $(document).ready(function () {
 
 
     //
+    // Handle tag toggle
+    //
+    $('.tag-toggle').on('click', function () {
+        movie_pk = $(this).attr("data-moviepk");
+        tag_pk = $(this).attr("data-tagpk");
+        toggle_tag_ajax(movie_pk, tag_pk)
+    });
+
+
+    //
     // Handle create tag button
     //
     $('#add-tag-submit').on('click', function () {
         create_tag()
+    });
+
+    //
+    // Handle LOVE button
+    //
+    $('#heart').on('click', function () {
+        toggle_heart_state($(this))
+    });
+
+    //
+    // Handle LIKE button
+    //
+    $('#like').on('click', function () {
+        toggle_like_state($(this))
+    });
+
+    //
+    // Handle DISLIKE button
+    //
+    $('#dislike').on('click', function () {
+        toggle_like_state($(this))
     });
 
 

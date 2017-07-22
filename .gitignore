@@ -7,6 +7,8 @@ registration_example_templates_from_redux_package
 test_area
 /test/
 .env
+NOTES.md
+TODO.md
 
 
 # Файлы, создаваемые приложением
@@ -23,4 +25,3 @@ __pycache__/
 test/*
 /media
 /bower_components/
-/TODO.md

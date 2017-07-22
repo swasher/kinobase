@@ -19,6 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
     'static',
 ]
@@ -41,7 +42,7 @@ LOGIN_REDIRECT_URL = 'movies'
 #
 # API and custom settings
 #
-MEDIA_URL = '/media/'  # or any prefix you choose
+
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 
@@ -54,9 +55,10 @@ ANYMAIL = {
     "MAILGUN_SENDER_DOMAIN": config('MAILGUN_SENDER_DOMAIN'),  # your Mailgun domain, if needed
 }
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-#DEFAULT_FROM_EMAIL = "you@example.com"                   # if you don't already have this in settings
+DEFAULT_FROM_EMAIL = "admin@cinemaset.pp.ua"                   # if you don't already have this in settings
 
 TMDB_API_KEY = config('TMDB_API_KEY_V3')
+STAR_RATINGS_RANGE = 10
 
 # Application definition
 
@@ -109,7 +111,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },

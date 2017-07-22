@@ -1,34 +1,71 @@
 {% extends "base.html" %}
 {% load static %}
+{% load ratings %}
 
 {% block css %}
+    <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
     <link rel="stylesheet" href="{% static "movie.css" %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+{% csrf_token %}
 
 <div class="row">
     <div class="col">
-        <img src="{{ prefix }}{{ moviedata.poster_path }}" alt="" >
+        <img src="{{ prefix }}{{ moviedata.poster_path }}" alt="" width="560px">
     </div>
 
     <div class="col">
         {% if tag_list %}
-            <div class="card" id="tag-panel">
+            <div class="card card-magrin-bottom">
                 <div class="card-block">
                     {% for tag in tag_list %}
                         <span id="{{ tag.pk }}"
-                              onclick="toggle_tag_ajax({{ moviedata.id }}, {{ tag.pk }})"
                               class="tag-toggle badge badge-default label-pointer-cursor
-                              {% if tag.active %} badge-success {% else %} badge-default {% endif %}"
+                                    {% if tag.active %} badge-success {% else %} badge-default {% endif %}"
+                              data-moviepk="{{ m.pk }}" data-tagpk="{{ tag.pk }}"
                         >{{ tag.name }}</span>
 
                     {% endfor %}
                 </div>
-
             </div>
         {% endif %}
 
+        <div class="card card-magrin-bottom">
+            <div class="card-block">
+                {% ratings m 20 20 %}
+            </div>
+        </div>
+
+        <div class="card card-magrin-bottom card-padding">
+            <div class="btn-toolbar justify-content-between" data-moviepk="{{ m.pk }}">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn {% if m.heart %}btn-danger{% else %}btn-outline-secondary{% endif %}" id="heart">
+                        <i class="fa fa-fw fa-heart-o" aria-hidden="true"></i>Love it
+                    </button>
+                    {% comment %}
+                    <button type="button" class="btn btn-danger" id="heart"><i class="fa fa-fw fa-heart" aria-hidden="true"></i>Love it</button>
+                    {% endcomment %}
+                </div>
+                <div class="btn-group" >
+                    <button type="button"
+                            class="btn {% if m.like %}btn-success{% else %}btn-outline-secondary{% endif %}"
+                            id="like">
+                        <i class="fa fa-fw  fa-thumbs-o-up" aria-hidden="true"></i>
+                        Like
+                    </button>
+                    <button type="button"
+                            class="btn {% if m.dislike %}btn-success{% else %}btn-outline-secondary{% endif %}"
+                            id="dislike">
+                        <i class="fa fa-fw fa-thumbs-o-down" aria-hidden="true"></i>
+                        Dislike
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <table class="table table-bordered">
             <tr><td>Title</td><td>
@@ -38,12 +75,11 @@
             </td></tr>
             <tr><td>Overview</td><td>{{ moviedata.overview }}</td></tr>
             <tr><td>Release date</td><td>{{ moviedata.release_date }}</td></tr>
-            <tr><td>Notice</td><td>
+            <tr><td>Notice<br><small>click to edit</small></td><td>
 
-            {% csrf_token %}
-            <p id='note-movie' data-movie-id='{{ m.tmdb_id }}' contenteditable="true">
-                {% if m.notice %}{{ m.notice }}{% else %}click to edit{% endif %}
-            </p>
+                <p id='note-movie' data-movie-pk='{{ m.pk }}' contenteditable="true">
+                    {% if m.notice %}{{ m.notice }}{% else %}click to edit{% endif %}
+                </p>
 
             </td>
             </tr>
