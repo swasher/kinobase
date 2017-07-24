@@ -93,7 +93,7 @@ def search(request):
 @login_required
 def movie(request, tmdbid):
     """
-    Нужно понимать, что мы переменная movie, которая передается в темплейт, это dict, а не объект типа Movie,
+    Нужно понимать, что мы переменная moviedata, которая передается в темплейт, это dict, а не объект типа Movie,
     потому что у нас в базе не хранятся данные о фильмах.
     :param request:
     :param tmdbid: int, номер по tmdb.com
@@ -111,7 +111,7 @@ def movie(request, tmdbid):
     poster_size = 'w500'
     prefix = base_url + poster_size
 
-    m = Movie.objects.get(tmdb_id=tmdbid)
+    m, _ = Movie.objects.get_or_create(tmdb_id=tmdbid, user=request.user)
 
     # Получаем список тегов, присвоенных данному фильму: <QuerySet ['tag2', 'tag5']>
     if Movie.objects.filter(tmdb_id=tmdbid).exists():
