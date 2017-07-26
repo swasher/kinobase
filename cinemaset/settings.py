@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from urllib.parse import urlparse
+import json
 import ast
 import dj_database_url
 from decouple import config
@@ -133,6 +135,28 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+#
+# CACHE
+#
+CACHES = {
+    'default': {
+        'BACKEND': 'django_bmemcached.memcached.BMemcached',
+        'LOCATION': config('MEMCACHEDCLOUD_SERVERS').split(','),
+        'OPTIONS': {
+            'username': config('MEMCACHEDCLOUD_USERNAME'),
+            'password': config('MEMCACHEDCLOUD_PASSWORD')
+        }
+    }
+}
+
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+
 
 # configure database for heroku
 db_from_env = dj_database_url.config(conn_max_age=500)

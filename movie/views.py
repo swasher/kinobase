@@ -136,6 +136,23 @@ def movie(request, tmdbid):
     return render(request, 'movie.html', {'m':m, 'moviedata': moviedata, 'prefix': prefix, 'tag_list': tag_list})
 
 
+# import asyncio
+# from atmdb import TMDbClient
+# async def get_movies(movies_paginator):
+#     client = TMDbClient(api_token=settings.TMDB_API_KEY)
+#     for m in movies_paginator.object_list:
+#         movie = await client.get_movie(m['id'])
+#         # assert movie.title == 'Fight Club'
+#         title = movie.title
+#         d = dict(['title', title])
+#         m.update(d)
+#     return movies_paginator
+
+
+from django.views.decorators.cache import cache_page
+
+
+@cache_page(60 * 15)
 @login_required
 def movies(request, tag=None):
     base_url = 'http://image.tmdb.org/t/p/'
@@ -172,11 +189,29 @@ def movies(request, tag=None):
         movies_paginator = paginator.page(paginator.num_pages)
 
     # После пагинации вытаскиваем из TMDB инфу только для фильмов, которые отобразятся на текущей странице пагинации
+    """
+    USING tmdbsimple
+    """
     tmdb.API_KEY = settings.TMDB_API_KEY
     for m in movies_paginator.object_list:
         movie = tmdb.Movies(m['id'])
         response = movie.info(language='ru-RU')
         m.update(response)
+
+    """
+    USING atmdb
+    aiohttp-2.2.3 async-timeout-1.2.1 atmdb-0.2.3 multidict-3.1.3 python-dateutil-2.6.1 yarl-0.12.0
+    """
+    #movies_paginator = get_movies(movies_paginator)
+
+    # from atmdb import TMDbClient
+    # client = TMDbClient(api_token=settings.TMDB_API_KEY)
+    # for m in movies_paginator.object_list:
+    #     movie = await client.get_movie(m['id'])
+    #     #assert movie.title == 'Fight Club'
+    #     title = movie.title
+    #     d = dict(['title', title])
+    #     m.update(d)
 
     return render(request, 'movies.html', {'movies': movies_paginator, 'prefix': prefix, 'tags':tags})
 
