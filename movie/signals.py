@@ -1,16 +1,17 @@
-from django.db.models.signals import pre_init
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
 import tmdbsimple as tmdb
 
 from .models import Movie
+from .models import Person
 
 
-@receiver(pre_init, sender=Movie)
+@receiver(post_save, sender=Movie)
 def update_people(sender, instance, **kwargs):
     """
-    D vj
     У нас могут существовать персоны в таблице Persons, которые принимали участие в данном Movie.
     При создании Movie нужно создать m2m связи к этим персонам.
     :param sender:
@@ -18,24 +19,29 @@ def update_people(sender, instance, **kwargs):
     :param kwargs:
     :return:
     """
-    tmdbid = instance.tmdbid
+    if kwargs['created']:
+        # Если true - значит это только что созданный инстанс Movie
 
-    tmdb.API_KEY = settings.TMDB_API_KEY
-    moviedata = tmdb.Movies(tmdbid)
+        tmdbid = instance.tmdbid
+        user = get_user_model().objects.get(pk=instance.user_id)
 
-    credits = moviedata.credits()
+        tmdb.API_KEY = settings.TMDB_API_KEY
+        moviedata = tmdb.Movies(tmdbid)
 
-    # id всех фильмов, в которых участвовал Person
-    crew = [k['id'] for k in credits['crew']]
-    cast = [k['id'] for k in credits['cast']]
-    filmography_ids = list(set().union(crew, cast))
+        credits = moviedata.credits()
 
-    # id всех фильмов в моей базе данных
-    stored_ids = list(Movie.objects.filter(user=request.user).values_list('tmdbid', flat=True))
+        # id всех Person для данного фильма
+        crew = [k['id'] for k in credits['crew']]
+        cast = [k['id'] for k in credits['cast']]
+        movie_persons_id = list(set().union(crew, cast))
 
-    # Находим все фильмы в базе с участием Person
-    person_movies = list(set(stored_ids) & set(filmography_ids))
+        # id всех Persons в моей базе данных
+        stored_persons_id = list(Person.objects.filter(user=user).values_list('tmdbid', flat=True))
 
-    for id in person_movies:
-        m = Movie.objects.get(tmdbid=id)
-        m.persons.add(p)
+        # Находим все Person, которые есть и в объекте Movie и в таблице Persons
+        persons = list(set(stored_persons_id) & set(movie_persons_id))
+        # deprecated persons = list(set().union(stored_persons_id, movie_persons_id))
+
+        for id in persons:
+            p = Person.objects.get(tmdbid=id, user=user)
+            instance.persons.add(p)

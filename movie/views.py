@@ -247,4 +247,4 @@ def addmovie(request, tmdbid):
 def deletemovie(request, pk):
     m = Movie.objects.get(pk=pk)
     m.delete()
-    return redirect('movies')
+    return redirect('movie_list')
