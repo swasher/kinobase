@@ -24,4 +24,4 @@ __pycache__/
 # Статика
 test/*
 /media
-/bower_components/
+/static/star-ratings/
