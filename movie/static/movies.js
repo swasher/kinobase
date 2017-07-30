@@ -76,7 +76,7 @@ function toggle_tag_ajax(movie_pk, tag_pk) {
 function closeSnoAlertBox() {
     window.setTimeout(function () {
         $("#snoAlertBox").fadeOut(300)
-    }, 3000);
+    }, 10000);
 }
 
 function update_messages(messages) {
@@ -86,11 +86,11 @@ function update_messages(messages) {
     })
 }
 
-function toggle_heart_state(button) {
+function toggle_favorite_state(button) {
     movie_pk = $(button).parent().parent().attr("data-moviepk");
 
     $.ajax({
-        url: '/toggle_heart_state/',
+        url: '/toggle_favorite_state/',
         data: {'movie_pk': movie_pk},
         dataType: 'json',
         method: 'POST',
@@ -144,6 +144,36 @@ function toggle_like_state(button) {
     });
 }
 
+function toggle_person(portrait) {
+    var person_tmdbid = $(portrait).attr('id');
+    console.log(person_tmdbid);
+
+    $.ajax({
+        url: '/toggle_person/',
+        data: {'person_tmdbid': person_tmdbid},
+        dataType: 'json',
+        method: 'POST',
+        success: function (json) {
+            console.log('state:', json['status']);
+
+            if (json.status === 'in_database') {
+                $(portrait).addClass('face-favorite');
+                $.ionSound.play("water_droplet");
+            } else if (json.status === 'deleted') {
+                $(portrait).removeClass('face-favorite');
+                $.ionSound.play("water_droplet");
+            } else if (json.status === 'failed') {
+                $("#snoAlertBox")
+                    .removeClass('alert-success')
+                    .addClass('alert-danger')
+                    .text('ERROR: '+json['error_code'])
+                    .fadeIn();
+            }
+            closeSnoAlertBox();
+
+        }
+    })
+}
 
 $(document).ready(function () {
 
@@ -152,18 +182,21 @@ $(document).ready(function () {
     };
 
 
-    $('[data-toggle="popover"]').popover({
-        trigger: 'hover',
-        placement: 'bottom',
-        animation: false
-        // constraints: [{to: 'scrollParent', pin: true}]
+    //
+    // Handle tooltipster
+    //
+
+    $('.tooltipster').tooltipster({
+        theme: 'tooltipster-punk',
+        contentAsHTML: true,
+        delay: 0,
+        plugins: ['follower']
     });
 
-
-    //
-    // Handle tooltip
-    //
-    $("[data-toggle='tooltip']").tooltip();
+    // //
+    // // Handle tooltip
+    // //
+    // $("[data-toggle='tooltip']").tooltip();
 
     //
     // init bunch of sounds
@@ -220,6 +253,15 @@ $(document).ready(function () {
 
 
     //
+    // Handle toggle favorite person
+    //
+    $('.face-image-container').on('click', function () {
+        portrait  = $(this);
+        toggle_person(portrait)
+    });
+
+
+    //
     // Handle tag toggle
     //
     $('.tag-toggle').on('click', function () {
@@ -239,8 +281,8 @@ $(document).ready(function () {
     //
     // Handle LOVE button
     //
-    $('#heart').on('click', function () {
-        toggle_heart_state($(this))
+    $('#favorite').on('click', function () {
+        toggle_favorite_state($(this))
     });
 
     //

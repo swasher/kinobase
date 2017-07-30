@@ -1,2 +1,2 @@
-Help to tracking seen/unseen movies.
+App to tracking seen/unseen movies.
 Build on TMDB

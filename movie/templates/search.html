@@ -25,41 +25,23 @@
 </div>
 
 
-{% if movies %}
+{% if moviesdata %}
     <div class="card-columns">
 
-        {% for movie in movies %}
+        {% for m in moviesdata %}
 
             <div class="card">
 
-        {#        HEADER    #}
-{#                    <div class="card-header">#}
-{#                        <h6>{{ movie.original_title }}</h6>#}
-{#                    </div>#}
-
-                <a href="{% url 'movie' movie.id %}"
-                   data-toggle="popover"
-                   title="{{ movie.title }} [{{ movie.release_date }}]"
-                   data-content="{{ movie.overview }}"
-                   style="white-space: nowrap;">
-                    <img class="img-fluid card-img-top"
-{#                         data-toggle="popover"#}
-{#                         data-content="And here's content"#}
-                         src="{{ prefix }}{{ movie.poster_path }}"
-                         alt=""
+                <a href="{% url 'addmovie' m.id %}"
+                   class="tooltipster"
+                   title="<strong>{{ m.title }}</strong><br>{{ m.release_date|slice:":4" }}"
+                   data-content="{{ m.overview }}">
+                   <img class="img-fluid card-img-top"
+                        src="{{ prefix }}{{ m.poster_path }}"
+                        alt=""
                     >
                 </a>
-        {#   BODY OF CARD      #}
-        {#                <div class="card-block">#}
 
-        {#                <h4 class="card-title">{{ movie.original_title }}</h4>#}
-        {#                <p class="card-text">{{ movie.overview }}</p>#}
-
-        {#         FOOTER #}
-        {#                    <p class="card-text">#}
-        {#                        <small class="text-muted">{{ movie.original_title }}</small>#}
-        {#                    </p>#}
-        {#                </div>#}
             </div>
         {% endfor %}
     </div>

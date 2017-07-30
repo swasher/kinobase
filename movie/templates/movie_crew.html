@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "movies.css" %}">
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>{{ title }}</h2>
+    <h3>Cast</h3>
+    {% for p in cast %}
+        <div class="face-image-container d-inline-block {% if p.stored %}face-favorite{% endif %}" id="{{ p.id }}">
+            <a href="#"
+               class="tooltipster"
+               title="<strong>{{ p.name }}</strong><br><small>{{ p.character }}<small>">
+               <img src="{% if p.profile_path %}{{ prefix }}{{ p.profile_path }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
+            </a>
+        </div>
+    {% endfor %}
+
+    <h3>Crew</h3>
+    {% for p in crew %}
+        <div class="face-image-container d-inline-block {% if p.stored %}face-favorite{% endif %}" id="{{ p.id }}">
+            <a href="#"
+               class="tooltipster"
+               title="<strong>{{ p.name }}</strong><br><small>{{ p.job }}</small>">
+               <img src="{% if p.profile_path %}{{ prefix }}{{ p.profile_path }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
+            </a>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}
