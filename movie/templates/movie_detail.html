@@ -30,9 +30,11 @@
     </div>
 
     <div class="col">
-        {% if tag_list %}
-            <div class="card card-magrin-bottom">
-                <div class="card-block">
+        <div class="card card-magrin-bottom">
+            <div class="card-block">
+                {% if tag_list %}
+
+
                     {% for tag in tag_list %}
                         <span id="{{ tag.pk }}"
                               class="tag-toggle badge badge-default label-pointer-cursor
@@ -41,9 +43,13 @@
                         >{{ tag.name }}</span>
 
                     {% endfor %}
-                </div>
+
+
+                {% else %}
+                    Списки: вы не еще не создали ни одного списка.
+                {% endif %}
             </div>
-        {% endif %}
+        </div>
 
         <div class="card card-magrin-bottom">
             <div class="card-block">
