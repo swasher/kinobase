@@ -92,3 +92,9 @@ def get_heroku_dump():
 
 def heroku_migrate():
     local('heroku run python manage.py migrate')
+
+
+def heroku_destroy_db():
+    local('heroku restart')
+    local('heroku pg:reset DATABASE --confirm cinemaset')
+    local('heroku run python manage.py migrate')
