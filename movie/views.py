@@ -240,7 +240,7 @@ def addmovie(request, tmdbid):
     if not Movie.objects.filter(tmdbid=tmdbid, user=request.user).exists():
         fetch_tmdb_data(tmdbid, request.user)
 
-    movie = Movie.objects.filter(tmdbid=tmdbid, user=request.user)
+    movie = Movie.objects.get(tmdbid=tmdbid, user=request.user)
     return redirect(movie)
 
 @login_required

@@ -98,3 +98,5 @@ def heroku_destroy_db():
     local('heroku restart')
     local('heroku pg:reset DATABASE --confirm cinemaset')
     local('heroku run python manage.py migrate')
+    local('heroku run python manage.py createsuperuser')
+

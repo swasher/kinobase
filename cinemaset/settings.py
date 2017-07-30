@@ -38,26 +38,24 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEBUG = config('DEBUG', cast=bool)
 SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', '*').split(',')
-LOGIN_REDIRECT_URL = 'movies'
+LOGIN_REDIRECT_URL = 'movie_list'
 
 
 #
 # API and custom settings
 #
-
-
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 
 ACCOUNT_ACTIVATION_DAYS = 1  # One-day user activation window
 REGISTRATION_AUTO_LOGIN = True
-REGISTRATION_DEFAULT_FROM_EMAIL = 'admin@cinema.collect.pp.ua'
+REGISTRATION_DEFAULT_FROM_EMAIL = 'admin@cinemaset.pp.ua'
 
 ANYMAIL = {
     "MAILGUN_API_KEY": config('MAILGUN_API_KEY'),
     "MAILGUN_SENDER_DOMAIN": config('MAILGUN_SENDER_DOMAIN'),  # your Mailgun domain, if needed
 }
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-DEFAULT_FROM_EMAIL = "admin@cinemaset.pp.ua"                   # if you don't already have this in settings
+DEFAULT_FROM_EMAIL = "admin@cinemaset.pp.ua"
 
 TMDB_API_KEY = config('TMDB_API_KEY_V3')
 STAR_RATINGS_RANGE = 10
@@ -135,6 +133,9 @@ DATABASES = {
         'PORT': '',
     }
 }
+# configure database for heroku
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 #
 # CACHE
@@ -158,15 +159,10 @@ if DEBUG:
     }
 
 
-# configure database for heroku
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
-"""
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -180,7 +176,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-]"""
+]
 
 
 # Internationalization
