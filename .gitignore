@@ -24,4 +24,3 @@ __pycache__/
 # Статика
 test/*
 /media
-/static/star-ratings/
