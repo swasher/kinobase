@@ -7,7 +7,7 @@ function addMessage(text, extra_tags) {
         message.fadeOut(500, function () {
             message.remove();
         });
-    }, 3000);
+    }, 300);
 }
 
 function create_tag() {
@@ -79,6 +79,7 @@ function closeSnoAlertBox() {
     }, 10000);
 }
 
+
 function update_messages(messages) {
     $("#div_messages").html("");
     $.each(messages, function (i, m) {
@@ -146,33 +147,34 @@ function toggle_like_state(button) {
 
 function toggle_person(portrait) {
     var person_tmdbid = $(portrait).attr('id');
-    console.log(person_tmdbid);
 
     $.ajax({
         url: '/toggle_person/',
         data: {'person_tmdbid': person_tmdbid},
         dataType: 'json',
         method: 'POST',
-        success: function (json) {
-            console.log('state:', json['status']);
-
-            if (json.status === 'in_database') {
-                $(portrait).addClass('face-favorite');
-                $.ionSound.play("water_droplet");
-            } else if (json.status === 'deleted') {
-                $(portrait).removeClass('face-favorite');
-                $.ionSound.play("water_droplet");
-            } else if (json.status === 'failed') {
-                $("#snoAlertBox")
-                    .removeClass('alert-success')
-                    .addClass('alert-danger')
-                    .text('ERROR: '+json['error_code'])
-                    .fadeIn();
-            }
-            closeSnoAlertBox();
-
+        beforeSend: function (xhr) {
+            alert(111)
         }
     })
+    .done(function (json) {
+        // console.log('state:', json['status']);
+        if (json.status === 'in_database') {
+            $(portrait).addClass('face-favorite');
+            $.ionSound.play("water_droplet");
+        } else if (json.status === 'deleted') {
+            $(portrait).removeClass('face-favorite');
+            $.ionSound.play("water_droplet");
+        } else if (json.status === 'failed') {
+            $("#snoAlertBox")
+                .removeClass('alert-success')
+                .addClass('alert-danger')
+                .text('ERROR: ' + json['error_code'])
+                .fadeIn();
+            closeSnoAlertBox();
+        }
+    })
+    .always(alert(111))
 }
 
 $(document).ready(function () {
@@ -181,11 +183,9 @@ $(document).ready(function () {
         theme: 'dark'
     };
 
-
     //
     // Handle tooltipster
     //
-
     $('.tooltipster').tooltipster({
         theme: 'tooltipster-punk',
         contentAsHTML: true,

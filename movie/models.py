@@ -10,11 +10,13 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+
 class Country(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
+
 
 # {'order': 1, 'profile_path': '/4d4wvNyDuvN86DoneawbLOpr8gH.jpg', 'gender': 1, 'credit_id': '52fe4c56c3a368484e1b31ab',
 # 'id': 4491, 'cast_id': 8, 'name': 'Jennifer Aniston', 'character': "Rose O'Reilly"}
@@ -65,7 +67,7 @@ class Movie(models.Model):
     overview = models.TextField(blank=True)
     poster = models.CharField(max_length=128, blank=True, verbose_name='часть url\'a для постера')
     runtime = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Продолжительность в минутах')
-    imdbid = models.CharField(max_length=16, blank=True, verbose_name='id на imdb')
+    imdbid = models.CharField(max_length=16, blank=True, null=True, verbose_name='id на imdb')
 
     class Meta:
         verbose_name = 'Фильм'

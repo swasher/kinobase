@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load ratings %}
+{% load custom_templates %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
@@ -12,6 +13,28 @@
 
 {% block content %}
 {% csrf_token %}
+
+<div class="row">
+    <div class="col">
+        <div class="card card-magrin-bottom">
+            <div class="card-block">
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h1>{{ movie.title }}</h1>
+                    </div>
+                    <div>
+                        <h1>{{ movie.year }}</h1>
+                    </div>
+                </div>
+                <div class="text-muted text-capitalize">{{ movie.original_title }}</div>
+{#                <p class="card-text">Want to know how much rent you could achieve for your property?&nbsp;#}
+{#                    <a href="#" class="btn btn-primary-outline pull-right">Arrange a Valuation</a></p>#}
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col">
@@ -85,13 +108,8 @@
         </div>
 
         <table class="table table-bordered">
-            <tr><td>Title</td><td>
-                <h4>{{ movie.title }}<br>
-                    <small class="text-muted">{{ movie.original_title }}</small>
-                </h4>
-            </td></tr>
             <tr><td>Overview</td><td>{{ movie.overview }}</td></tr>
-            <tr><td>Release date</td><td>{{ movie.year }}</td></tr>
+            <tr><td>Runtime</td><td>{{ movie.runtime|hour_mins }}</td></tr>
             <tr><td>Жанры</td><td>
                 {% for g in movie.genres.all %}
                     <span class="badge badge-info"> <a href="#">{{ g.name }}</a> </span>
@@ -113,8 +131,12 @@
                 <td><span class="badge badge-info">
                         <a href="https://www.themoviedb.org/movie/{{ movie.tmdbid }}">TMDB</a>
                     </span>
-                    <span class="badge badge-info">
-                        <a href="http://www.imdb.com/title/{{ movie.imdbid }}/">IMDB</a>
+                    <span class="badge badge-{% if movie.imdbid %}info{% else %}default{% endif %}">
+                        {% if movie.imdbid %}
+                            <a href="http://www.imdb.com/title/{{ movie.imdbid }}/">IMDB</a>
+                        {% else %}
+                            IMDB
+                        {% endif %}
                     </span>
                     <span class="badge badge-default">
                         Kinopoisk

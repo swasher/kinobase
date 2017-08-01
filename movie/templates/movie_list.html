@@ -18,18 +18,17 @@
 
     {% for movie in movies %}
 
-        {% comment %}<a href="{% url 'movie_detail' movie.tmdbid %}"{% endcomment %}
-        <a href="{{ movie.get_absolute_url }}"
-           data-toggle="tooltip"
-           data-html="true"
-           data-animation="false"
-           title="{{ movie.title }}<br> [{{ movie.year }}]">
+        <div class="poster-container d-inline-block">
 
-            <img class="img-fluid  grid-poster"
-              src="{{ prefix }}{{ movie.poster }}"
-              alt=""
-            >
-        </a>
+            <a class="tooltipster"
+               href="{{ movie.get_absolute_url }}"
+               title="{{ movie.title }}<br> [{{ movie.year }}]">
+               <img class="" src="{{ prefix }}{{ movie.poster }}">
+            </a>
+
+            <div class="movie-title">{{ movie.title }}</div>
+
+        </div>
 
     {% endfor %}
 

@@ -7,12 +7,6 @@
     width: 100px;
 }
 
-.grid-poster {
-        /*width: 158px;*/
-        /*height: 231px;*/
-        width: 182px;
-        height: 267px;
-}
 
 
 /*.card-img-top {*/
@@ -31,6 +25,38 @@
     line-height: 0.1rem;
 }
 
+/*********************/
+/* BIG MOVIE POSTER */
+/*********************/
+
+.poster-container {
+    width: 181px;
+    height: 266px;
+    border: thin solid red;
+    display: block;
+    margin: auto;
+    padding: 2px;
+    position: relative;
+}
+
+.poster-container img {
+    width: 171px;
+    height: 256px;
+    object-fit: cover;
+    border: thin solid green;
+}
+
+.movie-title {
+    font-family: 'PT Sans', sans-serif;
+    font-size: 11px;
+    position: absolute;
+    top: 0px;
+}
+
+/*.grid-poster {
+    !*width: 158px;*!
+    !*height: 231px;*!
+}*/
 
 /*****************/
 /* PEOPLE */
