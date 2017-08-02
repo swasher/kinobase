@@ -32,15 +32,11 @@ def cabinet(request):
 
 @login_required
 def search(request):
-
+    moviesdata = None
     if request.method == 'POST':
         form = MovieForm(request.POST)
         if form.is_valid():
             search_string = form.cleaned_data['movie']
-
-            tmdb.API_KEY = settings.TMDB_API_KEY
-
-            c = tmdb.Configuration()
             """
             Example configuration info
             {
@@ -56,11 +52,8 @@ def search(request):
                 }
             }
             """
-            configuration = c.info()
-            base_url = configuration['images']['secure_base_url']
-            poster_size = 'w185'
-            prefix = base_url + poster_size
 
+            tmdb.API_KEY = settings.TMDB_API_KEY
             search = tmdb.Search()
             response = search.movie(query=search_string, language='ru-RU')
 
@@ -87,10 +80,8 @@ def search(request):
             """
     else:
         form = MovieForm()
-        moviesdata = None
-        prefix = None
 
-    return render(request, 'search.html', {'form':form, 'moviesdata': moviesdata, 'prefix':prefix})
+    return render(request, 'search.html', {'form':form, 'moviesdata': moviesdata})
 
 
 @login_required
@@ -114,9 +105,6 @@ def updateinfo(request, pk):
 
 @login_required
 def crew(request, tmdbid):
-    base_url = 'http://image.tmdb.org/t/p/'
-    poster_size = 'w92' # w154
-    prefix = base_url + poster_size
 
     m = Movie.objects.get(tmdbid=tmdbid, user=request.user)
     title = '{} [{}]'.format(m.title, m.year)
@@ -155,7 +143,7 @@ def crew(request, tmdbid):
         if actor['id'] in actors_in_db:
             actor['stored'] = True
 
-    return render(request, 'movie_crew.html', {'cast': cast, 'crew':crew, 'prefix': prefix, 'title':title })
+    return render(request, 'movie_crew.html', {'cast': cast, 'crew':crew, 'title':title })
 
 
 @login_required

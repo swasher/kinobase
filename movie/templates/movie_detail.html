@@ -46,7 +46,7 @@
                    class="tooltipster"
                    title="<strong>{{ p.name }}</strong><br><small>{{ p.character }}<small>">
                     <img src="
-                            {% if p.face %}{{ faceprefix }}{{ p.face }}{% else %}{% static 'dummypeople.jpg' %}{% endif %}">
+                            {% if p.face %}{{ p.face|w45 }}{% else %}{% static 'dummypeople.jpg' %}{% endif %}">
                 </a>
             </div>
         {% endfor %}
@@ -112,12 +112,12 @@
             <tr><td>Runtime</td><td>{{ movie.runtime|hour_mins }}</td></tr>
             <tr><td>Жанры</td><td>
                 {% for g in movie.genres.all %}
-                    <span class="badge badge-info"> <a href="#">{{ g.name }}</a> </span>
+                    <span class="badge badge-primary"> <a href="#">{{ g.name }}</a> </span>
                 {% endfor %}
             </td></tr>
             <tr><td>Страны</td><td>
                 {% for c in movie.countries.all %}
-                    <span class="badge badge-info"> <a href="#">{{ c.name }}</a> </span>
+                    <span class="badge badge-primary"> <a href="#">{{ c.name }}</a> </span>
                 {% endfor %}
             </td></tr>
             <tr><td>Notice<br><small>click to edit</small></td><td>

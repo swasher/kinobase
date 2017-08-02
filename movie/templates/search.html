@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load custom_templates %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static "movie.css" %}">
+{#    <link rel="stylesheet" href="{% static "movie.css" %}">#}
+    <link rel="stylesheet" href="{% static "movies.css" %}">
 {% endblock %}
 
 {% block content %}
@@ -26,25 +28,34 @@
 
 
 {% if moviesdata %}
-    <div class="card-columns">
+
 
         {% for m in moviesdata %}
 
-            <div class="card">
+{% comment %}            <div class="card">
 
                 <a href="{% url 'addmovie' m.id %}"
                    class="tooltipster"
                    title="<strong>{{ m.title }}</strong><br>{{ m.release_date|slice:":4" }}"
                    data-content="{{ m.overview }}">
                    <img class="img-fluid card-img-top"
-                        src="{{ prefix }}{{ m.poster_path }}"
+                        src="{{ m.poster_path|w154 }}"
+{#                        src="https://image.tmdb.org/t/p/w154/{{ m.poster_path }}"#}
                         alt=""
                     >
                 </a>
 
+            </div>{% endcomment %}
+            <div class="poster-container d-inline-block">
+
+                <a href="{% url 'addmovie' m.id %}"
+                   class="tooltipster" {% comment %}title="{{ movie.title }}<br> [{{ movie.year }}]">{% endcomment %}
+                   title="<strong>{{ m.title }}</strong><br>{{ m.release_date }}">
+                   <img class="" src="{{ m.poster_path|w154 }}">
+                </a>
             </div>
         {% endfor %}
-    </div>
+
 {% endif %}
 
 {% endblock %}

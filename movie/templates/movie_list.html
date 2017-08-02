@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_templates %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static "movies.css" %}">
@@ -23,7 +24,7 @@
             <a class="tooltipster"
                href="{{ movie.get_absolute_url }}"
                title="{{ movie.title }}<br> [{{ movie.year }}]">
-               <img class="" src="{{ prefix }}{{ movie.poster }}">
+               <img class="" src="{{ movie.poster|w154 }}">
             </a>
         </div>
 

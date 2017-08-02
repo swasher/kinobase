@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_templates %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static "movies.css" %}">
@@ -17,7 +18,7 @@
                 <a href="#"
                    class="tooltipster "
                    title="<strong>{{ p.name }}</strong><br><small>{{ p.character }}<small>">
-                    <img  src="{% if p.profile_path %}{{ prefix }}{{ p.profile_path }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
+                    <img  src="{% if p.profile_path %}{{ p.profile_path|w92 }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
                     <div class="loader"></div>
                 </a>
             </div>
@@ -31,7 +32,7 @@
                 <a href="#"
                    class="tooltipster "
                    title="<strong>{{ p.name }}</strong><br><small>{{ p.job }}<small>">
-                    <img  src="{% if p.profile_path %}{{ prefix }}{{ p.profile_path }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
+                    <img  src="{% if p.profile_path %}{{ p.profile_path|w92 }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
                     <div class="loader"></div>
                 </a>
             </div>
@@ -44,6 +45,23 @@
             </a>
         </div>{% endcomment %}
     {% endfor %}
+
+
+
+
+<p>
+  <a class="btn btn-link" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Как работают Актеры
+  </a>
+
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-block">
+      Нажмите на Актера, чтобы записать его в "Любимые актры", после этого он выделится зеленой рамкой.
+      Теперь все фильмы будут показывать на своих страницах Любимых акторов.
+  </div>
+</div>
+
 
 
 {% endblock %}

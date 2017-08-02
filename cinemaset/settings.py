@@ -58,6 +58,8 @@ EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin@cinemaset.pp.ua"
 
 TMDB_API_KEY = config('TMDB_API_KEY_V3')
+SECURE_BASE_URL = 'https://image.tmdb.org/t/p/'
+
 STAR_RATINGS_RANGE = 10
 
 # Application definition
