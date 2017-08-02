@@ -27,11 +27,6 @@
     }
 }
 
-.popover.bs-tether-element-attached-top::after,
-.popover.bs-tether-element-attached-top::before {
-    left: 65%;
-}
-
 #tag-form {
     padding-top: 1rem;
     padding-bottom: 1rem;

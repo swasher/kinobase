@@ -10,6 +10,12 @@ function addMessage(text, extra_tags) {
     }, 300);
 }
 
+function closeSnoAlertBox() {
+    window.setTimeout(function () {
+        $("#snoAlertBox").fadeOut(300)
+    }, 3000);
+}
+
 function create_tag() {
     var frm = $('#create-tag-form');
     var skelet = "";
@@ -73,13 +79,6 @@ function toggle_tag_ajax(movie_pk, tag_pk) {
     });
 }
 
-function closeSnoAlertBox() {
-    window.setTimeout(function () {
-        $("#snoAlertBox").fadeOut(300)
-    }, 10000);
-}
-
-
 function update_messages(messages) {
     $("#div_messages").html("");
     $.each(messages, function (i, m) {
@@ -116,8 +115,6 @@ function toggle_like_state(button) {
     var movie_pk = $(button).parent().parent().attr("data-moviepk");
     var buttonid = $(button).attr("id");
 
-    //var likebutton = document.getElementById('like');
-    //var dislikebutton = document.getElementById('dislike');
     var likebutton = $('#like');
     var dislikebutton = $('#dislike');
 
@@ -153,17 +150,20 @@ function toggle_person(portrait) {
         data: {'person_tmdbid': person_tmdbid},
         dataType: 'json',
         method: 'POST',
-        beforeSend: function (xhr) {
-            alert(111)
+        beforeSend: function (xhr, settings) {
+            $.ajaxSettings.beforeSend(xhr, settings);
+            // Add loader animation classes
+            $(portrait).find(".loader").addClass('loader-spinner');
+            $(portrait).addClass('loader-shading')
         }
     })
     .done(function (json) {
         // console.log('state:', json['status']);
         if (json.status === 'in_database') {
-            $(portrait).addClass('face-favorite');
+            $(portrait).find(".face-inner").addClass('face-favorite');
             $.ionSound.play("water_droplet");
         } else if (json.status === 'deleted') {
-            $(portrait).removeClass('face-favorite');
+            $(portrait).find(".face-inner").removeClass('face-favorite');
             $.ionSound.play("water_droplet");
         } else if (json.status === 'failed') {
             $("#snoAlertBox")
@@ -174,7 +174,11 @@ function toggle_person(portrait) {
             closeSnoAlertBox();
         }
     })
-    .always(alert(111))
+    .always(function () {
+        // Remove loader animation classes
+        $(portrait).find(".loader").removeClass('loader-spinner');
+        $(portrait).removeClass('loader-shading')
+    })
 }
 
 $(document).ready(function () {
@@ -192,11 +196,6 @@ $(document).ready(function () {
         delay: 0,
         plugins: ['follower']
     });
-
-    // //
-    // // Handle tooltip
-    // //
-    // $("[data-toggle='tooltip']").tooltip();
 
     //
     // init bunch of sounds
@@ -229,8 +228,15 @@ $(document).ready(function () {
         }).done(function (json) {
             console.log(json['status']);
             console.log(json['actual_text']);
-            addMessage('Notice changed to: '+json['actual_text'], 'success')
-        })
+            //addMessage('Notice changed to: '+json['actual_text'], 'success')
+            $("#snoAlertBox")
+                .removeClass('alert-danger')
+                .addClass('alert-success')
+                .text('Notice changed to: ' + json['actual_text'])
+                .fadeIn();
+            closeSnoAlertBox();
+        });
+
     });
 
 

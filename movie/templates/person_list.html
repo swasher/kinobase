@@ -12,8 +12,7 @@
             <a href="#"
                class="tooltipster"
                title="<strong>{{ person.name }}</strong><br><small>{{ person.character }}<small>">
-                <img src="
-                        {% if person.profile_path %}{{ prefix }}{{ person.profile_path }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
+                <img src="{% if person.profile_path %}{{ prefix }}{{ person.profile_path }}{% else %}{% static 'dummyman.jpg' %}{% endif %}">
             </a>
         </div>
     {% endfor %}
