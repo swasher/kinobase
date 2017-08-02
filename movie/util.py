@@ -27,7 +27,10 @@ def fetch_tmdb_data(tmdbid, user):
     m.overview = response['overview']
     m.poster = response['poster_path']
     m.imdbid = response['imdb_id']
-    m.runtime = int(response['runtime'])
+    if response['runtime']:
+        m.runtime = int(response['runtime'])
+    else:
+        m.runtime = 0
 
     # countries = response.production_countries <class 'list'>: [{'name': 'United States of America', 'iso_3166_1': 'US'}]
     # genres = response.genres. Надо созадть таблицу жанров. genres возвращается так: <class 'list'>: [{'id': 12, 'name': 'приключения'}, {'id': 35, 'name': 'комедия'}, {'id': 10751, 'name': 'семейный'}, {'id': 878, 'name': 'фантастика'}]

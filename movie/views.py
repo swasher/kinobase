@@ -182,7 +182,7 @@ def movie_detail(request, pk):
         else:
             tag['active'] = False
 
-    return render(request, 'movie_detail.html', {'movie': movie, 'prefix': prefix, 'faceprefix':faceprefix, 'tag_list': tag_list})
+    return render(request, 'movie_detail.html', {'movie': movie, 'faceprefix':faceprefix, 'tag_list': tag_list})
 
 
 #@cache_page(60 * 5)

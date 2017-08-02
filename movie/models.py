@@ -64,7 +64,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=128, blank=True, verbose_name='Название на русском')
     original_title = models.CharField(max_length=128, blank=True, verbose_name='Название на языке оригинала')
     year = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Год выпуска')
-    overview = models.TextField(blank=True)
+    overview = models.TextField(blank=True, null=True)
     poster = models.CharField(max_length=128, blank=True, verbose_name='часть url\'a для постера')
     runtime = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Продолжительность в минутах')
     imdbid = models.CharField(max_length=16, blank=True, null=True, verbose_name='id на imdb')

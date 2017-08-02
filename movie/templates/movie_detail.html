@@ -38,7 +38,7 @@
 
 <div class="row">
     <div class="col">
-        <img src="{{ prefix }}{{ movie.poster }}" alt="" width="560px">
+        <img src="{{ movie.poster|w500 }}" width="560px">
 
         {% for p in movie.persons.all %}
             <div class="d-inline-block" id="{{ p.id }}">
@@ -108,7 +108,7 @@
         </div>
 
         <table class="table table-bordered">
-            <tr><td>Overview</td><td>{{ movie.overview }}</td></tr>
+            <tr><td>Overview</td><td>{{ movie.overview|default_if_none:'' }}</td></tr>
             <tr><td>Runtime</td><td>{{ movie.runtime|hour_mins }}</td></tr>
             <tr><td>Жанры</td><td>
                 {% for g in movie.genres.all %}
