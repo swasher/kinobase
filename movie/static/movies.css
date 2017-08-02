@@ -32,8 +32,8 @@
 .poster-container {
     width: 181px;
     height: 266px;
-    border: thin solid red;
-    display: block;
+    /*border: thin solid red;*/
+    /*display: block;*/
     margin: auto;
     padding: 2px;
     position: relative;
@@ -43,15 +43,20 @@
     width: 171px;
     height: 256px;
     object-fit: cover;
-    border: thin solid green;
+    /*border: thin solid green;*/
 }
-
+/*
+DEPRECATED
 .movie-title {
     font-family: 'PT Sans', sans-serif;
     font-size: 11px;
     position: absolute;
-    top: 0px;
+    top: 261px;
+    width: 171px;
+    height: 50px;
+    border: thin solid green;
 }
+*/
 
 /*.grid-poster {
     !*width: 158px;*!
