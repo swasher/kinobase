@@ -16,49 +16,57 @@ function closeSnoAlertBox() {
     }, 3000);
 }
 
-function create_tag() {
-    var frm = $('#create-tag-form');
-    var skelet = "";
-    skelet += "<span id=\"\" class=\"badge badge-default badge px-2\">";
-    skelet += "<span class=\"tagname\"><\/span>";
-    skelet += "<a href=\"#\" tabindex=\"-1\">";
-    skelet += "   <i data-tag-pk=\"\"";
-    skelet += "      data-tag-name=\"\"";
-    skelet += "      class=\"jqueryconfirm fa fa-times\" aria-hidden=\"true\"><\/i>";
-    skelet += "<\/a>";
-    skelet += "<\/span>";
-    newtag = $(skelet);
+function create_tag(frm) {
+
+    var skeleton = "";
+    skeleton += "<span id=\"\" class=\"badge badge-default badge px-2\">";
+    skeleton += "<span class=\"tagname\"><\/span>";
+    skeleton += "<a href=\"#\" tabindex=\"-1\">";
+    skeleton += "   <i data-tag-pk=\"\"";
+    skeleton += "      data-tag-name=\"\"";
+    skeleton += "      class=\"jqueryconfirm fa fa-times\" aria-hidden=\"true\"><\/i>";
+    skeleton += "<\/a>";
+    skeleton += "<\/span>";
+    skeleton = $(skeleton);
 
     $.ajax({
         url: frm.attr('action'),
         method: frm.attr('method'),
         data: frm.serialize(),
         dataType: 'json'
-    }).done(function (json) {
+    })
+    .done(function (json) {
         console.log(json['status']);
         console.log(json['name']);
         console.log(json['tagpk']);
-        if (json.status == 'sucess') {
+        if (json.success) {
 
-            $(newtag).attr('id', json['tagpk']);
-            $(newtag).children('.tagname').text(json['name'] + ' [0]');
-            $(newtag).find("i").attr("data-tag-pk", json['tagpk']);
-            $(newtag).find("i").attr("data-tag-name", json['name']);
+            $(skeleton).attr('id', json['tagpk']);
+            $(skeleton).children('.tagname').text(json['name'] + ' [0]');
+            $(skeleton).find("i").attr("data-tag-pk", json['tagpk']);
+            $(skeleton).find("i").attr("data-tag-name", json['name']);
 
             if ($('h4.card-title').length) {
-                // $skelet.removeAttr('hidden');
+                console.log('Creating first tag -> Remove dummy text');
                 $('h4.card-title').attr({'hidden': 'True'});
-                $('div.card-block').append(newtag);
+                $('div.card-block').append(skeleton);
             } else {
                 console.log('This is not first tag');
-                $('div.card-block').append(newtag);
+                $('div.card-block').append(skeleton);
             }
 
             $('.panel-body').on('click',  function () {
                 console.log($(this).text());
             });
         }
+        else {
+            alert(json.message)
+        }
     })
+    .fail(function(jqXHR, textStatus) {
+        // alert( "Request failed: " + textStatus );
+        alert( "Request failed: " + jqXHR.responseText.split('\n', 2).join('\n') );
+    });
 }
 
 function toggle_tag_ajax(movie_pk, tag_pk) {
@@ -268,7 +276,7 @@ $(document).ready(function () {
 
 
     //
-    // Handle tag toggle
+    // Handle tag toggle [movie detail page]
     //
     $('.tag-toggle').on('click', function () {
         movie_pk = $(this).attr("data-moviepk");
@@ -278,10 +286,11 @@ $(document).ready(function () {
 
 
     //
-    // Handle create tag button
+    // Handle create tag
     //
     $('#add-tag-submit').on('click', function () {
-        create_tag()
+        var form = $('#create-tag-form');
+        create_tag(form)
     });
 
     //

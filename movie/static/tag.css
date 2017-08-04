@@ -1,0 +1,63 @@
+@import url(main.css);
+
+/**********************************************/
+/* TAGS */
+/* http://stackoverflow.com/a/22401683/1334825 - orig suggestion */
+/* http://stackoverflow.com/a/35343087/1334825 - modified css */
+/* http://jsfiddle.net/7zkCU/30/ - fiddle */
+
+
+/* Containers for input and tag's block */
+
+#tags-form {
+    padding-bottom: 1rem;
+}
+
+#tags-list {
+}
+
+/* List of tags */
+
+.tag {
+    font-size: 14px;
+    padding: 0.5em 0.4em 0.3em 0.6em;
+    margin: 3px 1px !important;
+    display: inline-block;
+    max-width: 100%;
+}
+
+
+.tag > span {
+    display: inline-block;
+    max-width: 94%;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.tag a {
+    display: inline-block;
+    color: #bbb;
+    cursor: pointer;
+    opacity: 0.6;
+    margin: 0 0 0 0.3em;
+}
+
+.tag a:hover {
+    /*opacity: 1.0;*/
+    color: red;
+    transition: all 0.4s ease 0s;
+}
+
+/*.tag a .glyphicon-white {*/
+.tag a   {
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.tag .remove {
+    vertical-align: bottom;
+    top: 0;
+}

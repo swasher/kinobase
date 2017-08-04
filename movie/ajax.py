@@ -81,36 +81,35 @@ def toggle_person(request):
 
 @login_required
 @ensure_csrf_cookie
-def add_tag_ajax(request):
+def create_tag_ajax(request):
     """
     AJAX
     """
-    # if request.is_ajax() and request.method == u'POST':
-    if request.method == u'POST':
-        POST = request.POST
-        tagpk = None
-        results = {}
+    message = ''
+    tagpk = None
+    name = ''
 
-        if 'tag_name' in POST:
-            tag_name = str(POST['tag_name'])
+    if request.method == u'POST' and 'tag_name' in request.POST:
+        tag_name = str(request.POST['tag_name'])
 
-            try:
-                if not Tag.objects.filter(name=tag_name).exists():
-                    tag = Tag.objects.create(name=tag_name, user=request.user)
-                    tag.save()
-                    # messages.add_message(request, messages.INFO, 'tag {} creating success'.format(tag_name))
-                    status = 'sucess'
-                    tagpk = tag.pk
-                else:
-                    # messages.add_message(request, messages.WARNING, 'tag {} already exist'.format(tag_name))
-                    status = 'exist'
-            except:
-                status = 'failed'
-
-            results = {'status': status, 'name': tag_name, 'tagpk': tagpk}
+        if tag_name: # если тег не пустой
+            if not Tag.objects.filter(name=tag_name).exists():
+                tag = Tag.objects.create(name=tag_name, user=request.user)
+                tag.save()
+                success = True
+                tagpk = tag.pk
+                name = tag.name
+            else:
+                success = False
+                message = 'tag already exist'
+        else:
+            success = False
+            message = "Can't create empty tag"
     else:
-        results = {'status': 'non-ajax', 'name': None}
+        success = False
+        message = 'non-ajax'
 
+    results = {'success': success, 'message': message, 'name': name, 'tagpk': tagpk}
     return JsonResponse(results)
 
 

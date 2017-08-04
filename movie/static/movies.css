@@ -26,16 +26,16 @@
 }
 
 /*********************/
-/* BIG MOVIE POSTER */
+/* MOVIE LIST POSTER */
 /*********************/
 
 .poster-container {
-    width: 181px;
-    height: 266px;
+    /*width: 181px;*/
+    /*height: 266px;*/
     /*border: thin solid red;*/
     /*display: block;*/
     margin: auto;
-    padding: 2px;
+    padding-bottom: 4px;
     position: relative;
 }
 
@@ -119,26 +119,6 @@ DEPRECATED
     /*z-index: 999;*/
 }
 
-.loader-identity {
-    /*Allow top, left, right, bottom
-    to be set relative to container*/
-    position: absolute;
-
-    /*Set edges of tag so margin auto knows the max boundry*/
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-
-    /*Allows the use of margin auto*/
-    display: block;
-
-    /*Horizontally and vertically centered
-    (Display block will fill remaining margin space equally)*/
-    margin: auto;
-    imag: url('ajax-loader.gif') 50% 50% no-repeat;
-}
-
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
@@ -156,3 +136,18 @@ DEPRECATED
         transform: rotate(360deg);
     }
 }
+
+
+
+.card-magrin-bottom {
+    margin-bottom: 0.7rem;
+}
+
+.card-padding {
+    padding: 0.5rem;
+}
+
+#add-tag-submit {
+    margin-left: 1rem;
+}
+

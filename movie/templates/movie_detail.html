@@ -112,12 +112,12 @@
             <tr><td>Runtime</td><td>{{ movie.runtime|hour_mins }}</td></tr>
             <tr><td>Жанры</td><td>
                 {% for g in movie.genres.all %}
-                    <span class="badge badge-primary"> <a href="#">{{ g.name }}</a> </span>
+                    <span class="badge badge-primary"> <a href="{% push_GET_data genre=g.pk %}">{{ g.name }}</a> </span>
                 {% endfor %}
             </td></tr>
             <tr><td>Страны</td><td>
                 {% for c in movie.countries.all %}
-                    <span class="badge badge-primary"> <a href="#">{{ c.name }}</a> </span>
+                    <span class="badge badge-primary"> <a href="{% push_GET_data country=c.pk %}">{{ c.name }}</a> </span>
                 {% endfor %}
             </td></tr>
             <tr><td>Notice<br><small>click to edit</small></td><td>

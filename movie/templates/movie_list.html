@@ -8,27 +8,39 @@
 
 {% block content %}
 
-    <div class="card" id="tag-buttons-panel">
-        <div class="card-block">
-            {% for tag in tags %}
-                <a class="btn btn-outline-success" href="{% url 'movie_list' tag.pk %}" role="button">{{ tag.name }} [{{ tag.total }}]</a>
+    <div class="row  justify-content-between">
+
+        <div class="col-2">
+            <div class="card" id="tag-buttons-panel">
+                <div class="card-block">
+                    {% for tag in tags %}
+{#                        <a class="btn btn-outline-success" href="{% url 'movie_list' tag.pk %}" role="button">{{ tag.name }} [{{ tag.total }}]</a>#}
+                        <li> <a class="" href="{% url 'movie_list' tag.pk %}" role="button">{{ tag.name }} [{{ tag.total }}]</a></li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col ">
+            {% for movie in movies %}
+
+                <div class="poster-container d-inline-block">
+
+                    <a class="tooltipster"
+                       href="{{ movie.get_absolute_url }}"
+                       title="{{ movie.title }}<br> [{{ movie.year }}]">
+                       <img  src="{{ movie.poster|w154 }}">
+                    </a>
+                </div>
+
             {% endfor %}
         </div>
+
+
     </div>
 
 
-    {% for movie in movies %}
 
-        <div class="poster-container d-inline-block">
-
-            <a class="tooltipster"
-               href="{{ movie.get_absolute_url }}"
-               title="{{ movie.title }}<br> [{{ movie.year }}]">
-               <img class="" src="{{ movie.poster|w154 }}">
-            </a>
-        </div>
-
-    {% endfor %}
 
 <div class="row justify-content-center pag">
     {% if movies.has_other_pages %}

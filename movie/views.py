@@ -154,15 +154,6 @@ def movie_detail(request, pk):
                          и тогда его нужно сначала создать.
     :return: movie     - объект Movie
     """
-
-    # TODO надо избавиться от частых вызовов (код в search) и либо обновлять эти, по сути, константы, изредка, или
-    # вобще их в settings прописать
-    base_url = 'http://image.tmdb.org/t/p/'
-    poster_size = 'w500'
-    face_size = 'w45'
-    prefix = base_url + poster_size
-    faceprefix = base_url + face_size
-
     movie = Movie.objects.get(pk=pk)
 
     # Получаем список тегов, присвоенных данному фильму: <QuerySet ['tag2', 'tag5']>
@@ -182,18 +173,25 @@ def movie_detail(request, pk):
         else:
             tag['active'] = False
 
-    return render(request, 'movie_detail.html', {'movie': movie, 'faceprefix':faceprefix, 'tag_list': tag_list})
+    return render(request, 'movie_detail.html', {'movie': movie, 'tag_list': tag_list})
 
 
 #@cache_page(60 * 5)
 @login_required
 def movie_list(request, tag=None):
-    base_url = 'http://image.tmdb.org/t/p/'
-    poster_size = 'w154'
-    prefix = base_url + poster_size
-
     user = request.user
-    tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
+    get = request.GET
+
+    movie_list = Movie.objects.filter(user=user)
+
+    filters = ['country', 'genre']
+    sortings = ['title', 'year', 'runtime', ]
+    for key, value in request.GET.items():
+        if key in filters:
+            # add_filter(k, v)
+            pass
+        if key in sortings:
+            movie_list = movie_list.order_by(value)
 
     # Если вьюха была вызвана пользователем путем нажатия на тэг, то ответ фильтруется по тэгу
     if tag:
@@ -202,7 +200,20 @@ def movie_list(request, tag=None):
     else:
         movie_list = Movie.objects.filter(user=user)
 
-    paginator = Paginator(movie_list, 12)  # Show N movies per page
+
+
+    # products = Product.objects.all()
+    # order = request.GET.get('order', 'name')  # Set 'name' as a default value
+    # products = products.order_by(order)
+    # return render(request, 'products_list.html', {
+    #     'products': products
+    # })
+
+
+
+    tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
+
+    paginator = Paginator(movie_list, 15)  # Show N movies per page
     page = request.GET.get('page', 1)
     try:
         movies_paginator = paginator.page(page)
@@ -213,7 +224,7 @@ def movie_list(request, tag=None):
         # If page is out of range (e.g. 9999), deliver last page of results.
         movies_paginator = paginator.page(paginator.num_pages)
 
-    return render(request, 'movie_list.html', {'movies': movies_paginator, 'prefix': prefix, 'tags':tags})
+    return render(request, 'movie_list.html', {'movies': movies_paginator, 'tags':tags})
 
 
 

@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^tag_list/$', views.tag_list, name='tag_list'),
     url(r'^toggle_tag_ajax/$', ajax.toggle_tag_ajax, name='toggle_tag_ajax'),
     url(r'^delete_tag_ajax/$', ajax.delete_tag_ajax, name='delete_tag_ajax'),
-    url(r'^add_tag_ajax/$', ajax.add_tag_ajax, name='add_tag_ajax'),
+    url(r'^add_tag_ajax/$', ajax.create_tag_ajax, name='add_tag_ajax'),
 
     url(r'^toggle_favorite_state/$', ajax.toggle_favorite_state, name='toggle_favorite_state'),
     url(r'^toggle_like_state/$', ajax.toggle_like_state, name='toggle_like_state'),

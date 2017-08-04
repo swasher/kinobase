@@ -2,56 +2,60 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static "movie.css" %}">
+    <link rel="stylesheet" href="{% static "tag.css" %}">
 {% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-md-center" id="tag-form">
-  <form type="text" id="create-tag-form" class="form-inline" role="form" method="POST"
-        accept-charset="UTF-8" action="{% url 'add_tag_ajax' %}">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <label class="sr-only" for="inlineFormInput">tag name</label>
+<div class="row " id="tags-form">
+    <div class="col-7 mx-auto">
+        <form type="text" id="create-tag-form" class="form-inline justify-content-center"
+              role="form" method="POST" accept-charset="UTF-8"
+              action="{% url 'add_tag_ajax' %}">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <label class="sr-only" for="inlineFormInput">tag name</label>
+                <input id="inlineFormInput"
+                       type="search"
+                       class="form-control-lg"
+                       placeholder="список"
+                       name="tag_name"
+                       size="18"
+                       required
+                >
 
-    <input id="inlineFormInput"
-           type="text"
-           class="form-control-lg"
-           placeholder="список"
-           name="tag_name"
-           size="18">
-
-    {{ form.name.errors }}
-    <button id="add-tag-submit" type="button" class="btn btn-lg btn-success">Новый список</button>
-  </form>
+            {{ form.name.errors }}
+            <button id="add-tag-submit" type="button" class="btn btn-lg btn-success ml-2">Новый список</button>
+        </form>
+    </div>
 </div>
 
-<div class="row justify-content-md-center">
-    <div class="card" id="tag-card">
-        <div class="card-header">
-            Твои теги
-        </div>
-        <div class="card-block jquery-confirm-delete" id="tag-block">
-            {% if tags %}
-                {% for tag in tags %}
-                    <span id="{{ tag.pk }}" class="badge badge-default badge px-2">
-                        <span class="tagname">{{ tag.name }} [{{ tag.total }}]</span>
-                            <a href="#" tabindex="-1">
-                               <i data-tag-pk="{{ tag.pk }}"
-                                  data-tag-name="{{ tag.name }}"
-                                  class="fa fa-times" aria-hidden="true"></i>
-                            </a>
-                    </span>
-                {% endfor %}
+<div class="row justify-content-center" id="tags-list">
+    <div class="col-7 align-self-center">
+        <div class="card" id="tag-card">
+            <div class="card-header">
+                Твои теги
+            </div>
+            <div class="card-block jquery-confirm-delete" id="tag-block">
+                {% if tags %}
+                    {% for tag in tags %}
+                        <span id="{{ tag.pk }}" class="badge badge-default badge px-2">
+                            <span class="tagname">{{ tag.name }} [{{ tag.total }}]</span>
+                                <a href="#" tabindex="-1">
+                                   <i data-tag-pk="{{ tag.pk }}"
+                                      data-tag-name="{{ tag.name }}"
+                                      class="fa fa-times" aria-hidden="true"></i>
+                                </a>
+                        </span>
+                    {% endfor %}
 
-            {% else %}
+                {% else %}
 
-                <h4 class="card-title">Create at least one tag</h4>
-            {% endif %}
+                    <h4 class="card-title">Create at least one tag</h4>
+                {% endif %}
+            </div>
         </div>
     </div>
-
 </div>
-
 
 {% endblock %}
