@@ -59,6 +59,7 @@ h2 {
 /**********************************************/
 /* Jquery popup (in bootstrap messages style) */
 
+/* DEPRECATED
 #snoAlertBox {
     position: absolute;
     z-index: 1400;
@@ -67,4 +68,12 @@ h2 {
     margin: 0px auto;
     text-align: center;
     display: none;
+}*/
+
+#floating_alert {
+    position: absolute;
+    width: 500px;
+    top: 20px;
+    right: 20px;
+    z-index: 5000;
 }

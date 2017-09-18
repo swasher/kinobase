@@ -10,11 +10,12 @@ function addMessage(text, extra_tags) {
     }, 300);
 }
 
+/* DEPRECATED
 function closeSnoAlertBox() {
     window.setTimeout(function () {
         $("#snoAlertBox").fadeOut(300)
     }, 3000);
-}
+}*/
 
 function create_tag(frm) {
 
@@ -174,12 +175,13 @@ function toggle_person(portrait) {
             $(portrait).find(".face-inner").removeClass('face-favorite');
             $.ionSound.play("water_droplet");
         } else if (json.status === 'failed') {
-            $("#snoAlertBox")
+            /* DEPRECATED            $("#snoAlertBox")
                 .removeClass('alert-success')
                 .addClass('alert-danger')
                 .text('ERROR: ' + json['error_code'])
                 .fadeIn();
-            closeSnoAlertBox();
+            closeSnoAlertBox();*/
+            bootstrap_alert.show('ERROR: ' + json['error_code'], 'danger', 4000)
         }
     })
     .always(function () {
@@ -236,13 +238,14 @@ $(document).ready(function () {
         }).done(function (json) {
             console.log(json['status']);
             console.log(json['actual_text']);
-            //addMessage('Notice changed to: '+json['actual_text'], 'success')
-            $("#snoAlertBox")
+            // DEPRECATED addMessage('Notice changed to: '+json['actual_text'], 'success')
+            /* DEPRECATED $("#snoAlertBox")
                 .removeClass('alert-danger')
                 .addClass('alert-success')
                 .text('Notice changed to: ' + json['actual_text'])
                 .fadeIn();
-            closeSnoAlertBox();
+            closeSnoAlertBox();*/
+            bootstrap_alert.show('Notice changed to: ' + json['actual_text'], 'success', 4000)
         });
 
     });

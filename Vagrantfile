@@ -10,8 +10,9 @@ project_name = "cinemaset"
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "boxcutter/ubuntu1610"
   #config.vm.box = "wholebits/ubuntu17.04-64"
+  #config.vm.box = "boxcutter/ubuntu1610"
+  config.vm.box = "wholebits/ubuntu17.04-64"
   config.vm.network "private_network", ip: internal_ip
   config.vm.hostname = project_name
 
