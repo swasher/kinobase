@@ -17,29 +17,29 @@
     {% load admin_urls %}
 
     <!-- JQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Do not use SLIM version of jquery library of you will have "Uncaught TypeError: $.ajaxSetup is not a function" error -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <!-- Bootsrap v4 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    {#    <link rel="stylesheet" href="https://cdn.rawgit.com/thomaspark/bootswatch/v4/solar/bootstrap.min.css">#}
-    <link rel="stylesheet" href="https://cdn.rawgit.com/thomaspark/bootswatch/v4/slate/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <!-- Tooltipster-->
     <!-- <script src="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/js/tooltipster.bundle.min.js"></script> -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/tooltipster.bundle.min.css"> -->
     <script src="https://cdn.rawgit.com/iamceege/tooltipster/bd3a35af/dist/js/tooltipster.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.rawgit.com/iamceege/tooltipster/bd3a35af/dist/css/tooltipster.bundle.min.css">
-    <!-- Tooltipster pligin for tooltip follow mouse-->
+    <!-- Tooltipster plugin for tooltip follow mouse-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/louisameline/tooltipster-follower@0.1.5/dist/css/tooltipster-follower.min.css">
     <script src="https://cdn.jsdelivr.net/gh/louisameline/tooltipster-follower@0.1.5/dist/js/tooltipster-follower.min.js"></script>
 
 
 
     <!-- jquery-confirm -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
     <!-- other loads -->
     <script src="https://cdn.rawgit.com/Krinkle/jquery-json/23398043/dist/jquery.json.min.js"></script>
@@ -74,7 +74,7 @@
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <title>Cinema[set] - your private movies collection</title>
+    <title>KinoBase - your private movies collection</title>
 
 </head>
 

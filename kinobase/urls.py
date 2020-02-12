@@ -1,5 +1,5 @@
 """
-cinemaset URL Configuration
+kinobase URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -18,22 +18,23 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import url, include
+from django.urls import path
 from django.contrib import admin
 
 
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('django.contrib.auth.urls')),
-    url(r'^', include('accounts.urls')),
-    url(r'^', include('movie.urls')),
-    url(r'^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
+    path('admin/', admin.site.urls),
+    path('', include('django.contrib.auth.urls')),
+    path('', include('accounts.urls')),
+    path('', include('movie.urls')),
+    # path('^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
-
     urlpatterns.append(
-        url(r'^__debug__/', include(debug_toolbar.urls)),
+        path('__debug__/', include(debug_toolbar.urls)),
     )

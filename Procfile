@@ -1,1 +1,1 @@
-web: gunicorn cinemaset.wsgi --log-file -
+web: gunicorn kinobase.wsgi --log-file -

@@ -201,15 +201,12 @@ def movie_list(request, tag=None):
         movie_list = Movie.objects.filter(user=user)
 
 
-
     # products = Product.objects.all()
     # order = request.GET.get('order', 'name')  # Set 'name' as a default value
     # products = products.order_by(order)
     # return render(request, 'products_list.html', {
     #     'products': products
     # })
-
-
 
     tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
 
@@ -227,7 +224,6 @@ def movie_list(request, tag=None):
     return render(request, 'movie_list.html', {'movies': movies_paginator, 'tags':tags})
 
 
-
 @login_required
 def tag_list(request):
     tags = Tag.objects.filter(user=request.user).annotate(total=Count('movie')).values('pk', 'name', 'total')
@@ -241,6 +237,7 @@ def addmovie(request, tmdbid):
 
     movie = Movie.objects.get(tmdbid=tmdbid, user=request.user)
     return redirect(movie)
+
 
 @login_required
 def deletemovie(request, pk):

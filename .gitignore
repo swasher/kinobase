@@ -8,7 +8,7 @@ test_area
 /test/
 .env
 NOTES.md
-TODO.md
+deprecated-requirements.txt
 
 
 # Файлы, создаваемые приложением

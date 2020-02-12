@@ -85,6 +85,7 @@ def create_tag_ajax(request):
     """
     AJAX
     """
+    print('create_tag_ajax')
     message = ''
     tagpk = None
     name = ''

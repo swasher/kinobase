@@ -25,7 +25,7 @@
 #    executable: /bin/bash
 #
 #- name: install requirements
-#  shell: "source /home/vagrant/virtualenvironment/bin/activate && cd ~/cinemaset && pip install -r requirements.txt"
+#  shell: "source /home/vagrant/virtualenvironment/bin/activate && cd ~/kinobase && pip install -r requirements.txt"
 #  args:
 #    chdir: "{{ project_root }}"
 #    executable: /bin/bash

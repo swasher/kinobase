@@ -3,26 +3,26 @@ certifi==2017.4.17
 cffi==1.10.0
 chardet==3.0.4
 cryptography==1.9
-dj-database-url==0.4.2
-Django==1.11
-django-anymail==0.10
-django-bmemcached==0.2.3
+    dj-database-url==0.4.2
+    Django==1.11
+    django-anymail==0.10
+    django-bmemcached==0.2.3
 django-braces==1.11.0
-django-debug-toolbar==1.6
+    django-debug-toolbar==1.6
 django-model-utils==3.0.0
-django-registration-redux==1.6
-django-star-ratings==0.5.5
-gunicorn==19.7.1
+    django-registration-redux==1.6
+    django-star-ratings==0.5.5
+    gunicorn==19.7.1
 idna==2.5
-psycopg2==2.7.1
+    psycopg2==2.7.1
 pycparser==2.17
 pyOpenSSL==17.1.0
 python-binary-memcached==0.26.1
-python-decouple==3.0
+    python-decouple==3.0
 pytz==2017.2
 requests==2.18.1
 six==1.10.0
 sqlparse==0.2.3
 tmdbsimple==1.7.0
 urllib3==1.21.1
-whitenoise==3.3.0
+    whitenoise==3.3.0

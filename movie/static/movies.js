@@ -20,6 +20,7 @@ function closeSnoAlertBox() {
 function create_tag(frm) {
 
     var skeleton = "";
+    console.log('create_tag');
     skeleton += "<span id=\"\" class=\"badge badge-default badge px-2\">";
     skeleton += "<span class=\"tagname\"><\/span>";
     skeleton += "<a href=\"#\" tabindex=\"-1\">";

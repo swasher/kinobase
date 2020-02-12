@@ -3,7 +3,7 @@ from .models import Movie
 from .models import Tag
 
 
-admin.site.site_header = 'Private Cinema'
+admin.site.site_header = 'KinoBase'
 
 admin.site.register(Movie)
 admin.site.register(Tag)

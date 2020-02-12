@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
+
 
 
 class Genre(models.Model):
@@ -32,7 +33,7 @@ class Person(models.Model):
 
     """
     tmdbid = models.PositiveIntegerField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     face = models.CharField(max_length=128, blank=True, verbose_name='часть url\'a для постера')  # like '/4d4wvNyDuvN86DoneawbLOpr8gH.jpg'
 
@@ -48,7 +49,7 @@ class Person(models.Model):
 # ON DELETE CASCADE - вместе с данным объектом удаляются все объекты, внешние ключи которых указывают на данный объект.
 class Movie(models.Model):
     tmdbid = models.PositiveIntegerField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     notice = models.TextField(blank=True, verbose_name='Заметка пользователя')
     genres = models.ManyToManyField(Genre)
     countries = models.ManyToManyField(Country)
@@ -109,7 +110,7 @@ class Movie(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=30)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ManyToManyField(Movie, blank=True)
 
     class Meta:

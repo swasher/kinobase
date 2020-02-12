@@ -11,7 +11,7 @@
     <div class="col-7 mx-auto">
         <form type="text" id="create-tag-form" class="form-inline justify-content-center"
               role="form" method="POST" accept-charset="UTF-8"
-              action="{% url 'add_tag_ajax' %}">
+              action="{% url 'create_tag_ajax' %}">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 <label class="sr-only" for="inlineFormInput">tag name</label>

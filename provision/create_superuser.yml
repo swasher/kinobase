@@ -29,7 +29,7 @@
     #      command: createsuperuser --noinput --email='{{superuseremail}}'
     #      app_path: "{{project_root}}"
     #      virtualenv: "{{virtualenv}}"
-    #      settings: "cinemaset.settings"
+    #      settings: "kinobase.settings"
     #    #args:
     #    #  chdir: "{{project_root}}"
     #    environment:

@@ -1,6 +1,6 @@
 ---
-project_repo:       http://github.com/swasher/cinemaset.git
-project_name:       cinemaset
+project_repo:       http://github.com/swasher/kinobase.git
+project_name:       kinobase
 user_home:         "/home/{{ remote_user }}"
 virtualenv:        "{{ user_home }}/virtualenvironment"
 project_root:      "{{ user_home }}/{{ project_name }}"

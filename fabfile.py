@@ -5,7 +5,7 @@ from fabric.operations import prompt
 from fabric.context_managers import lcd
 
 env.use_ssh_config = True
-env.project_path = '/home/vagrant/cinemaset/'
+env.project_path = '/home/vagrant/kinobase/'
 
 
 # def staging():
