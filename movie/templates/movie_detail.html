@@ -27,10 +27,7 @@
                         <h1>{{ movie.year }}</h1>
                     </div>
                 </div>
-                <div class="text-muted text-capitalize">{{ movie.original_title }}</div>
-{#                <p class="card-text">Want to know how much rent you could achieve for your property?&nbsp;#}
-{#                    <a href="#" class="btn btn-primary-outline pull-right">Arrange a Valuation</a></p>#}
-
+                <div class="text-muted text-capitalize"><h4>{{ movie.original_title }}</h4></div>
             </div>
         </div>
     </div>
@@ -38,22 +35,13 @@
 
 <div class="row">
     <div class="col">
-        <img src="{{ movie.poster|w500 }}" width="560px">
+        <img src="{{ movie.poster|w500 }}" width="500px">
 
-        {% for p in movie.persons.all %}
-            <div class="d-inline-block" id="{{ p.id }}">
-                <a href="#"
-                   class="tooltipster"
-                   title="<strong>{{ p.name }}</strong><br><small>{{ p.character }}<small>">
-                    <img src="
-                            {% if p.face %}{{ p.face|w45 }}{% else %}{% static 'dummypeople.jpg' %}{% endif %}">
-                </a>
-            </div>
-        {% endfor %}
+
     </div>
 
     <div class="col">
-        <div class="card card-magrin-bottom">
+        <div class="card card-margin-bottom">
             <div class="card-block">
                 {% if tag_list %}
 
@@ -146,6 +134,18 @@
                     </span>
                 </td></tr>
         </table>
+
+         {% for p in movie.persons.all %}
+            <div class="d-inline-block" id="{{ p.id }}">
+                <a href="#"
+                   class="tooltipster"
+                   title="<strong>{{ p.name }}</strong><br><small>{{ p.character }}<small>">
+                    <img src="
+                            {% if p.face %}{{ p.face|w45 }}{% else %}{% static 'dummypeople.jpg' %}{% endif %}">
+                </a>
+            </div>
+        {% endfor %}
+
 
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group" role="group" aria-label="First group">

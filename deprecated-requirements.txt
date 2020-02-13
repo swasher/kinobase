@@ -23,6 +23,6 @@ pytz==2017.2
 requests==2.18.1
 six==1.10.0
 sqlparse==0.2.3
-tmdbsimple==1.7.0
+    tmdbsimple==1.7.0
 urllib3==1.21.1
     whitenoise==3.3.0
