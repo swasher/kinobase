@@ -82,9 +82,9 @@ INSTALLED_APPS = [
     'movie',
 ]
 
-if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-    INTERNAL_IPS = '172.28.128.22'
+# if DEBUG:
+#     INSTALLED_APPS.append('debug_toolbar')
+#     INTERNAL_IPS = '172.28.128.22'
 
 
 MIDDLEWARE = [
