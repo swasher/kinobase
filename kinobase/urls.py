@@ -33,8 +33,8 @@ urlpatterns = [
     path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-# if settings.DEBUG:
-#     import debug_toolbar
-#     urlpatterns.append(
-#         path('__debug__/', include(debug_toolbar.urls)),
-#     )
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns.append(
+        path('__debug__/', include(debug_toolbar.urls)),
+    )
