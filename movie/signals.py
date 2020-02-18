@@ -5,8 +5,10 @@ from django.conf import settings
 
 import tmdbsimple as tmdb
 
+from accounts.models import User
 from .models import Movie
 from .models import Person
+from .models import Tag
 
 
 @receiver(post_save, sender=Movie)
@@ -45,3 +47,13 @@ def update_people(sender, instance, **kwargs):
         for id in persons:
             p = Person.objects.get(tmdbid=id, user=user)
             instance.persons.add(p)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    print('Signal USER')
+    if kwargs.get('created', False):
+        for tag in settings.PREDEFINED_TAGS:
+            new_tag = Tag.objects.create(name=tag, user=instance, permanent=True, permanent_custom_name=tag)
+            new_tag.save()
+            # instance.profile.save()

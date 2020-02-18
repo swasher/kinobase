@@ -70,7 +70,7 @@ h2 {
     display: none;
 }*/
 
-#floating_alert {
+.alert-fadeout  {
     position: absolute;
     width: 500px;
     top: 20px;

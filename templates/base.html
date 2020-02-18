@@ -21,21 +21,18 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <!-- Bootsrap v4 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <!-- Tooltipster-->
-    <!-- <script src="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/js/tooltipster.bundle.min.js"></script> -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/tooltipster.bundle.min.css"> -->
-    <script src="https://cdn.rawgit.com/iamceege/tooltipster/bd3a35af/dist/js/tooltipster.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.rawgit.com/iamceege/tooltipster/bd3a35af/dist/css/tooltipster.bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/iamceege/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iamceege/tooltipster/dist/css/tooltipster.bundle.min.css">
+
     <!-- Tooltipster plugin for tooltip follow mouse-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/louisameline/tooltipster-follower@0.1.5/dist/css/tooltipster-follower.min.css">
     <script src="https://cdn.jsdelivr.net/gh/louisameline/tooltipster-follower@0.1.5/dist/js/tooltipster-follower.min.js"></script>
-
-
 
     <!-- jquery-confirm -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
@@ -49,7 +46,8 @@
     <!-- Own CSS and JS -->
     <link rel="stylesheet" href="{% static "main.css" %}">
     <script src="{% static "csfr_ajax.js" %}"></script>
-    <script src="{% static "bootstrap-alert.js" %}"></script>
+    {#  DEPRECATED  <script src="{% static "bootstrap-alert.js" %}"></script>#}
+    <script src="{% static "custom.js" %}"></script>
     <script src="{% static "movies.js" %}"></script>
     <script src="{% static "inline-edit.js" %}"></script>
     {% block css %}{% endblock %}
@@ -81,14 +79,12 @@
 <body class="d-flex flex-column">
 
     {% comment %} DEPRECATED <div id="snoAlertBox" class="alert" data-alert="alert"></div>{% endcomment %}
+    {% include "messages.html" %}
 
     <div class="container flex-grow">
         {% include "navbar.html" %}
-
-        {% include "messages.html" %}
         {% block title %}    {% endblock %}
         {% block content %}  {% endblock %}
-
     </div>
 
     {% include "footer.html" %}

@@ -47,16 +47,18 @@ LOGIN_REDIRECT_URL = 'movie_list'
 #
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 
-ACCOUNT_ACTIVATION_DAYS = 1  # One-day user activation window
-REGISTRATION_AUTO_LOGIN = True
-REGISTRATION_DEFAULT_FROM_EMAIL = 'admin@kinobase.pp.ua'
-
 ANYMAIL = {
     "MAILGUN_API_KEY": config('MAILGUN_API_KEY'),
     "MAILGUN_SENDER_DOMAIN": config('MAILGUN_SENDER_DOMAIN'),  # your Mailgun domain, if needed
+    "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3"
 }
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-DEFAULT_FROM_EMAIL = "admin@kinobase.pp.ua"
+DEFAULT_FROM_EMAIL = 'admin@' + ANYMAIL['MAILGUN_SENDER_DOMAIN']
+SERVER_EMAIL = 'admin@' + ANYMAIL['MAILGUN_SENDER_DOMAIN']
+
+ACCOUNT_ACTIVATION_DAYS = 1  # One-day user activation window
+REGISTRATION_AUTO_LOGIN = True
+REGISTRATION_DEFAULT_FROM_EMAIL = 'admin@' + ANYMAIL['MAILGUN_SENDER_DOMAIN']
 
 TMDB_API_KEY = config('TMDB_API_KEY_V3')
 SECURE_BASE_URL = 'https://image.tmdb.org/t/p/'
@@ -84,7 +86,7 @@ INSTALLED_APPS = [
 
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
-    INTERNAL_IPS = '172.28.128.22'
+    INTERNAL_IPS = ('127.0.0.1', '192.168.1.149',)
 
 
 MIDDLEWARE = [
@@ -166,8 +168,6 @@ if DEBUG:
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
-
 """AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -207,4 +207,7 @@ MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.INFO: 'info',
                 message_constants.SUCCESS: 'success',
                 message_constants.WARNING: 'warning',
-                message_constants.ERROR: 'danger',}
+                message_constants.ERROR: 'danger'}
+
+# list of predefined tags
+PREDEFINED_TAGS = ['WATCHED', 'UNWATCHED', 'REJECTED', 'REJECTED', 'FAVOURITES']

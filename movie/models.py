@@ -30,20 +30,22 @@ class Person(models.Model):
     - Когда мы открывыаем страницу фильма, мы сразу видим кто из favorite принимал в нем участие
     - По нажитию на кнопку - появляются все актеры и команда, и мы можем кого-то из них добавить в favorite
     - Лица на странице Фильма отображаются из локальной базы, на странице People - делается реквест на tmdb
-
     """
+
     tmdbid = models.PositiveIntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     face = models.CharField(max_length=128, blank=True, verbose_name='часть url\'a для постера')  # like '/4d4wvNyDuvN86DoneawbLOpr8gH.jpg'
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Фильм'
         verbose_name_plural = 'Фильмы'
         unique_together = ("tmdbid", "user")
+
+    def __str__(self):
+        return self.name
+
+
 
 
 # ON DELETE CASCADE - вместе с данным объектом удаляются все объекты, внешние ключи которых указывают на данный объект.
@@ -56,8 +58,8 @@ class Movie(models.Model):
     persons = models.ManyToManyField(Person)
 
     # five predefined 'tags'
-    like = models.BooleanField(default=False, verbose_name='Лайк') # Может быть включен только один из Like-Dislike.
-    dislike = models.BooleanField(default=False, verbose_name='Дизлайк') # Это регулируется в сигналах и рисуется через jQuery
+    like = models.BooleanField(default=False, verbose_name='Лайк')  # Может быть включен только один из Like-Dislike.
+    dislike = models.BooleanField(default=False, verbose_name='Дизлайк')  # Это регулируется в сигналах и рисуется через jQuery
     favorite = models.BooleanField(default=False, verbose_name='Любимый фильм')
     watched = models.BooleanField(default=False, verbose_name='Просмотрено')
     planned = models.BooleanField(default=False, verbose_name='Буду смотреть')
@@ -112,6 +114,8 @@ class Tag(models.Model):
     name = models.CharField(max_length=30)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ManyToManyField(Movie, blank=True)
+    permanent = models.BooleanField(default=False, help_text='Предустановленные теги, не могут быть удалены')
+    permanent_custom_name = models.CharField(max_length=30, help_text='Пользовательские имена для предустановленных тегов')
 
     class Meta:
         verbose_name = 'Список'
@@ -119,4 +123,7 @@ class Tag(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return self.name
+        if self.permanent:
+            return self.permanent_custom_name
+        else:
+            return self.name

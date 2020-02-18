@@ -6,4 +6,11 @@ from .models import Tag
 admin.site.site_header = 'KinoBase'
 
 admin.site.register(Movie)
-admin.site.register(Tag)
+
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user')
+
+
+admin.site.register(Tag, TagAdmin)
+

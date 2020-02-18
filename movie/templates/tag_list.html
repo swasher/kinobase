@@ -31,14 +31,16 @@
 </div>
 
 <div class="row justify-content-center" id="tags-list">
-    <div class="col-7 align-self-center">
+    <div class="col-6 align-self-center">
         <div class="card" id="tag-card">
             <div class="card-header">
                 Твои теги
             </div>
-            <div class="card-block jquery-confirm-delete" id="tag-block">
+            <div class="card-block jquery-confirm-action" id="tag-block">
                 {% if tags %}
-                    {% for tag in tags %}
+                  {% comment %}
+                  {% for tag in tags %}
+                     <p class="p-0 m-0 flex-grow-1">
                         <span id="{{ tag.pk }}" class="badge badge-default badge px-2">
                             <span class="tagname">{{ tag.name }} [{{ tag.total }}]</span>
                                 <a href="#" tabindex="-1">
@@ -47,15 +49,37 @@
                                       class="fa fa-times" aria-hidden="true"></i>
                                 </a>
                         </span>
+                     </p>
                     {% endfor %}
+                    {% endcomment %}
+
+                    <ul class="list-group">
+                        {% for tag in tags %}
+                            <li id="{{ tag.pk }}" class="list-group-item d-flex justify-content-between">
+                                <p id="{{ tag.pk }}" class="tagname p-0 m-0 flex-grow-1">
+                                    {{ tag.name }}
+                                    <span class="badge badge-pill badge-primary">{{ tag.total }}</span>
+                                </p>
+
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" data-tag-pk="{{ tag.pk }}" data-tag-name="{{ tag.name }}" class="btn btn-success btn-rename-click">Rename</button>
+                                    <button type="button" data-tag-pk="{{ tag.pk }}" data-tag-name="{{ tag.name }}" class="btn btn-danger btn-delete-click">Delete</button>
+                                </div>
+
+                            </li>
+                        {% endfor %}
+                    </ul>
 
                 {% else %}
-
                     <h4 class="card-title">Create at least one tag</h4>
                 {% endif %}
+
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 {% endblock %}

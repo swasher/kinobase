@@ -34,10 +34,8 @@
 </div>
 
 <div class="row">
-    <div class="col">
-        <img src="{{ movie.poster|w500 }}" width="500px">
-
-
+    <div class="col-4">
+        <img class="img-fluid" src="{{ movie.poster|w500 }}">
     </div>
 
     <div class="col">
@@ -144,7 +142,7 @@
                             {% if p.face %}{{ p.face|w45 }}{% else %}{% static 'dummypeople.jpg' %}{% endif %}">
                 </a>
             </div>
-        {% endfor %}
+         {% endfor %}
 
 
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
