@@ -14,15 +14,15 @@ https://docs.bitnami.com/virtual-machine/infrastructure/postgresql/
 - open postresql port
 
         # sudo ufw allow 5432
-
-- создаем базу
-
-        # createdb -U postgres DATABASE_NAME  -O USER_NAME
         
 - (факультативно) создаем юзера
 
         # createuser -U postgres USER_NAME -S -D -R -P
-   
+
+- создаем базу
+
+        # createdb -U postgres DATABASE_NAME  -O USER_NAME
+
 - add to /opt/bitnami/postgresql/data/pg_hba.conf as root. Если работаем от кастомного юзера, меняем postgres на юзера
 
         host DATABASE_NAME postgres all md5

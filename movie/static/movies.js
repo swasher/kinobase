@@ -4,14 +4,26 @@ function create_tag(frm) {
 
     var skeleton = "";
     console.log('create_tag');
-    skeleton += "<span id=\"\" class=\"badge badge-default badge px-2\">";
-    skeleton += "<span class=\"tagname\"><\/span>";
-    skeleton += "<a href=\"#\" tabindex=\"-1\">";
-    skeleton += "   <i data-tag-pk=\"\"";
-    skeleton += "      data-tag-name=\"\"";
-    skeleton += "      class=\"jqueryconfirm fa fa-times\" aria-hidden=\"true\"><\/i>";
-    skeleton += "<\/a>";
-    skeleton += "<\/span>";
+    // skeleton += "<span id=\"\" class=\"badge badge-default badge px-2\">";
+    // skeleton += "<span class=\"tagname\"><\/span>";
+    // skeleton += "<a href=\"#\" tabindex=\"-1\">";
+    // skeleton += "   <i data-tag-pk=\"\"";
+    // skeleton += "      data-tag-name=\"\"";
+    // skeleton += "      class=\"jqueryconfirm fa fa-times\" aria-hidden=\"true\"><\/i>";
+    // skeleton += "<\/a>";
+    // skeleton += "<\/span>";
+    // skeleton = $(skeleton);
+
+    skeleton += "<li id=\"{{ tag.pk }}\" class=\"list-group-item d-flex justify-content-between\">";
+    skeleton += "<p id=\"{{ tag.pk }}\" class=\"tagname p-0 m-0 flex-grow-1\">";
+    skeleton += "{{ tag.name }}";
+    skeleton += "<span class=\"badge badge-pill badge-primary\">{{ tag.total }}</span>";
+    skeleton += "</p>";
+    skeleton += "<div class=\"btn-group btn-group-sm\" role=\"group\">";
+    skeleton += "<button type=\"button\" data-tag-pk=\"\" data-tag-name=\"\" class=\"btn btn-success btn-rename-click\">Rename</button>";
+    skeleton += "<button type=\"button\" data-tag-pk=\"\" data-tag-name=\"\" class=\"btn btn-danger btn-delete-click\">Delete</button>";
+    skeleton += "</div>";
+    skeleton += "</li>";
     skeleton = $(skeleton);
 
     $.ajax({
@@ -70,29 +82,23 @@ function delete_tag(tagpk, tagname, tagobj) {
                         data: {tagpk: tagpk},
                         dataType: 'json'
                     })
-                        .done(function (json) {
-                            if (json['status'] == 'sucess') {
-                                tagobj.empty();
-                                update_messages(json['messages']);
-                                $("#snoAlertBox")
-                                    .removeClass('alert-danger')
-                                    .addClass("alert-success")
-                                    .text('Список ' + json['name'] + ' успешно удален')
-                                    .fadeIn();
-                                console.log('DELETE tag: success')
-                            } else if (json['status'] == 'exist') {
-                                $("#snoAlertBox")
-                                    .removeClass("alert-success")
-                                    .addClass("alert-danger")
-                                    .text('Список ' + json['name'] + ' не может быть удален - он содержит фильмы!')
-                                    .fadeIn();
-                                console.log('DELETE tag: reject')
-                            }
-                            closeSnoAlertBox();
-                        })
-                        .fail(function () {
-                            alert('fail')
-                        });
+                    .done(function (json) {
+                        if (json['status'] == 'sucess') {
+                            tagobj.remove();
+                            update_messages(json['messages']);
+                            addMessage('Список ' + json['name'] + ' успешно удален', 'success');
+                            console.log('DELETE tag: success')
+                        } else if (json['status'] == 'permanent') {
+                            addMessage('Список ' + json['name'] + ' системный - не может быть удален', 'warning');
+                            console.log('DELETE tag: reject')
+                        } else if (json['status'] == 'exist') {
+                            addMessage('Список ' + json['name'] + ' успешно удален', 'success');
+                            console.log('DELETE tag: reject')
+                        }
+                    })
+                    .fail(function () {
+                        alert('fail')
+                    });
                 }
             },
             cancel: function () {
@@ -213,7 +219,7 @@ function toggle_person(portrait) {
                 .text('ERROR: ' + json['error_code'])
                 .fadeIn();
             closeSnoAlertBox();*/
-            bootstrap_alert.show('ERROR: ' + json['error_code'], 'danger', 4000)
+            addMessage('ERROR: ' + json['error_code'], 'danger')
         }
     })
     .always(function () {
@@ -277,7 +283,7 @@ $(document).ready(function () {
                 .text('Notice changed to: ' + json['actual_text'])
                 .fadeIn();
             closeSnoAlertBox();*/
-            bootstrap_alert.show('Notice changed to: ' + json['actual_text'], 'success', 4000)
+            addMessage('Notice changed to: ' + json['actual_text'], 'success')
         });
 
     });

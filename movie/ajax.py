@@ -131,7 +131,10 @@ def delete_tag_ajax(request):
             try:
                 tag = Tag.objects.get(pk=tagpk)
                 tag_name = tag.name
-                if not Movie.objects.filter(tag=tag).exists():
+                # if not Movie.objects.filter(tag=tag).exists():
+                if tag.permanent:
+                    status = 'permanent'
+                elif not tag.permanent:
                     # messages.add_message(request, messages.INFO, "Tag `{}` delete success".format(tag_name))
                     # messages.success(request, "The object has been modified.")
                     tag.delete()
