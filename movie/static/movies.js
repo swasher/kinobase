@@ -1,30 +1,5 @@
-
-
 function create_tag(frm) {
-
-    var skeleton = "";
     console.log('create_tag');
-    // skeleton += "<span id=\"\" class=\"badge badge-default badge px-2\">";
-    // skeleton += "<span class=\"tagname\"><\/span>";
-    // skeleton += "<a href=\"#\" tabindex=\"-1\">";
-    // skeleton += "   <i data-tag-pk=\"\"";
-    // skeleton += "      data-tag-name=\"\"";
-    // skeleton += "      class=\"jqueryconfirm fa fa-times\" aria-hidden=\"true\"><\/i>";
-    // skeleton += "<\/a>";
-    // skeleton += "<\/span>";
-    // skeleton = $(skeleton);
-
-    skeleton += "<li id=\"{{ tag.pk }}\" class=\"list-group-item d-flex justify-content-between\">";
-    skeleton += "<p id=\"{{ tag.pk }}\" class=\"tagname p-0 m-0 flex-grow-1\">";
-    skeleton += "{{ tag.name }}";
-    skeleton += "<span class=\"badge badge-pill badge-primary\">{{ tag.total }}</span>";
-    skeleton += "</p>";
-    skeleton += "<div class=\"btn-group btn-group-sm\" role=\"group\">";
-    skeleton += "<button type=\"button\" data-tag-pk=\"\" data-tag-name=\"\" class=\"btn btn-success btn-rename-click\">Rename</button>";
-    skeleton += "<button type=\"button\" data-tag-pk=\"\" data-tag-name=\"\" class=\"btn btn-danger btn-delete-click\">Delete</button>";
-    skeleton += "</div>";
-    skeleton += "</li>";
-    skeleton = $(skeleton);
 
     $.ajax({
         url: frm.attr('action'),
@@ -38,11 +13,18 @@ function create_tag(frm) {
         console.log(json['tagpk']);
         if (json.success) {
 
-            $(skeleton).attr('id', json['tagpk']);
-            $(skeleton).attr('id', json['tagpk']);
-            $(skeleton).children('.tagname').text(json['name'] + ' [0]');
-            $(skeleton).find("i").attr("data-tag-pk", json['tagpk']);
-            $(skeleton).find("i").attr("data-tag-name", json['name']);
+            let skeleton = `` +
+            `<li id="${json['tagpk']}" class="list-group-item d-flex justify-content-between">` +
+            `<p id="${json['tagpk']}" class="tagname p-0 m-0 flex-grow-1">` +
+            `${json["name"]} ` +
+            `<span class="badge badge-pill badge-primary">0</span>` +
+            `</p>` +
+            `<div class="btn-group btn-group-sm" role="group">` +
+            `<button type="button" data-tag-pk="" data-tag-name="" class="btn btn-success btn-rename-click">Rename</button>` +
+            `<button type="button" data-tag-pk="" data-tag-name="" class="btn btn-danger btn-delete-click">Delete</button>` +
+            `</div>` +
+            `</li>`;
+            skeleton = $(skeleton);
 
             if ($('h4.card-title').length) {
                 console.log('Creating first tag -> Remove dummy text');
@@ -67,44 +49,85 @@ function create_tag(frm) {
     });
 }
 
+
 function delete_tag(tagpk, tagname, tagobj) {
-    $.confirm({
-        title: 'Deleting "' + tagname + '" tag',
-        content: 'Are you sure?',
+    bootbox.confirm({
+        title: 'Delete tag' + tagname,
+        message: 'Are you sure?',
+        centerVertical: true,
+        swapButtonOrder : true,
         buttons: {
             confirm: {
-                text: 'Delete',
-                btnClass: 'btn-danger',
-                action: function () {
-                    $.ajax({
-                        url: '/delete_tag_ajax/',
-                        type: 'POST',
-                        data: {tagpk: tagpk},
-                        dataType: 'json'
-                    })
-                    .done(function (json) {
-                        if (json['status'] == 'sucess') {
-                            tagobj.remove();
-                            update_messages(json['messages']);
-                            addMessage('Список ' + json['name'] + ' успешно удален', 'success');
-                            console.log('DELETE tag: success')
-                        } else if (json['status'] == 'permanent') {
-                            addMessage('Список ' + json['name'] + ' системный - не может быть удален', 'warning');
-                            console.log('DELETE tag: reject')
-                        } else if (json['status'] == 'exist') {
-                            addMessage('Список ' + json['name'] + ' успешно удален', 'success');
-                            console.log('DELETE tag: reject')
-                        }
-                    })
-                    .fail(function () {
-                        alert('fail')
-                    });
-                }
+                label: 'Yes',
+                className: 'btn-success'
             },
-            cancel: function () {
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: '/delete_tag_ajax/',
+                    type: 'POST',
+                    data: {tagpk: tagpk},
+                    dataType: 'json'
+                })
+                .done(function (json) {
+                    if (json['status'] === 'success') {
+                        tagobj.remove();
+                        addMessage('Список ' + json['name'] + ' успешно удален', 'success');
+                        console.log('deleting tag: success')
+                    } else if (json['status'] === 'permanent') {
+                        addMessage('Список ' + json['name'] + ' системный - не может быть удален', 'warning');
+                        console.log('deleting tag: reject')
+                    } else if (json['status'] === 'exist') {
+                        addMessage('Список ' + json['name'] + ' не удален - имеет фильмы', 'error');
+                        console.log('deleting tag: exist')
+                    }
+                })
+                .fail(function () {
+                    alert('fail')
+                });
             }
         }
     })
+}
+
+
+function rename_tag(tagpk, tagname, tagobj) {
+    bootbox.prompt({
+        title: "Новое имя тега:",
+        centerVertical: true,
+        callback: function(result) {
+            console.log(result);
+            let newName = result;
+            // addMessage('Переименовываем: ' + tagname + ' в ' + result, 'info');
+            if (result) {
+                $.ajax({
+                    url: '/rename_tag_ajax/',
+                    type: 'POST',
+                    data: {tag_pk: tagpk, new_name: newName},
+                    dataType: 'json'
+                })
+                .done(function (json) {
+                    if (json['status'] === 'success') {
+                        // tagobj.remove();
+                        addMessage(`Список ${json['name']} успешно переименован в ${newName}`, 'success');
+                        console.log('rename tag: success')
+                    } else if (json['status'] === 'failed') {
+                        // TODO добавить вывод описание ошибки из exceptions
+                        addMessage('failed');
+                        console.log('rename tag: failed')
+                    }
+                })
+                .fail(function () {
+                    alert('fail')
+                });
+            }
+        }
+    });
 }
 
 
@@ -126,12 +149,6 @@ function toggle_tag_ajax(movie_pk, tag_pk) {
     });
 }
 
-function update_messages(messages) {
-    $("#div_messages").html("");
-    $.each(messages, function (i, m) {
-        $("#div_messages").append("<div class='alert alert-" + m.level + "''>" + m.message + "</div>");
-    })
-}
 
 function toggle_favorite_state(button) {
     movie_pk = $(button).parent().parent().attr("data-moviepk");
@@ -231,9 +248,10 @@ function toggle_person(portrait) {
 
 $(document).ready(function () {
 
-    jconfirm.defaults = {
-        theme: 'dark'
-    };
+    // DEPRECATED
+    // jconfirm.defaults = {
+    //     theme: 'dark'
+    // };
 
     //
     // Handle tooltipster
@@ -379,75 +397,13 @@ $(document).ready(function () {
     // });
 
 
-    // // Confirmation for delete tag
-    // //
-    // // Мы мспользуем Event delegation (https://learn.javascript.ru/event-delegation), иначе только что созданные
-    // // теги не будет иметь хандлера удаления на крестике. Поэтому хадлер висит на объекте-родителе, и при клике
-    // // мы проверяем, на каком элементе был клик, и уже тогда выполняем удаление соотв. тега.
-    // //
-    // $('.jquery-confirm-delete').on('click', function () {
-    //
-    //     var target = event.target;
-    //
-    //     // Нужно кликнуть по элементу I (крестику), чтобы выполнить удаление тега
-    //     if (target.tagName !== 'I') return;
-    //
-    //     var tagpk = $(target).attr('data-tag-pk');
-    //     var tagname = $(target).attr('data-tag-name');
-    //     var tagobj = $("span#" + tagpk);
-    //
-    //     $.confirm({
-    //         title: 'Deleting "' + tagname + '" tag',
-    //         content: 'Are you sure?',
-    //         buttons: {
-    //             confirm: {
-    //                 text: 'Delete',
-    //                 btnClass: 'btn-danger',
-    //                 action: function () {
-    //                     $.ajax({
-    //                         url: '/delete_tag_ajax/',
-    //                         type: 'POST',
-    //                         data: {tagpk: tagpk},
-    //                         dataType: 'json'
-    //                     })
-    //                         .done(function (json) {
-    //                             if (json['status'] == 'sucess') {
-    //                                 tagobj.empty();
-    //                                 update_messages(json['messages']);
-    //                                 $("#snoAlertBox")
-    //                                     .removeClass('alert-danger')
-    //                                     .addClass("alert-success")
-    //                                     .text('Список ' + json['name'] + ' успешно удален')
-    //                                     .fadeIn();
-    //                                 console.log('DELETE tag: success')
-    //                             } else if (json['status'] == 'exist') {
-    //                                 $("#snoAlertBox")
-    //                                     .removeClass("alert-success")
-    //                                     .addClass("alert-danger")
-    //                                     .text('Список ' + json['name'] + ' не может быть удален - он содержит фильмы!')
-    //                                     .fadeIn();
-    //                                 console.log('DELETE tag: reject')
-    //                             }
-    //                             closeSnoAlertBox();
-    //                         })
-    //                         .fail(function () {
-    //                             alert('fail')
-    //                         });
-    //                 }
-    //             },
-    //             cancel: function () {
-    //             }
-    //         }
-    //     })
-    // })
-
     // Confirmation for delete tag
     //
     // Мы мспользуем Event delegation (https://learn.javascript.ru/event-delegation), иначе только что созданные
     // теги не будет иметь хандлера удаления на крестике. Поэтому хадлер висит на объекте-родителе, и при клике
     // мы проверяем, на каком элементе был клик, и уже тогда выполняем удаление соотв. тега.
     //
-    $('.jquery-confirm-action').on('click', function () {
+    $('.js-delete').on('click', function () {
 
         let target = event.target;
 
@@ -455,7 +411,8 @@ $(document).ready(function () {
             console.log('rename');
             let tagpk = $(target).attr('data-tag-pk');      // передается в django для удаления из базы
             let tagname = $(target).attr('data-tag-name');  // используется только в всплывающем алерте
-            addMessage('Переименовываем: ' + tagname, 'warning')
+            let tagobj = $("li#" + tagpk);                  // это DOM-ветка, которую удаляем с экрана при удалении тга
+            rename_tag(tagpk, tagname, tagobj)
         }
 
         if (target.classList.contains('btn-delete-click')) {
@@ -465,8 +422,6 @@ $(document).ready(function () {
             let tagobj = $("li#" + tagpk);                  // это DOM-ветка, которую удаляем с экрана при удалении тга
             delete_tag(tagpk, tagname, tagobj)
         }
-
-        return;
 
     })
 

@@ -21,6 +21,7 @@ urlpatterns = [
     path('toggle_tag_ajax/', ajax.toggle_tag_ajax, name='toggle_tag_ajax'),
     path('delete_tag_ajax/', ajax.delete_tag_ajax, name='delete_tag_ajax'),
     path('create_tag_ajax/', ajax.create_tag_ajax, name='create_tag_ajax'),
+    path('rename_tag_ajax/', ajax.rename_tag_ajax, name='rename_tag_ajax'),
 
     path('toggle_favorite_state/', ajax.toggle_favorite_state, name='toggle_favorite_state'),
     path('toggle_like_state/', ajax.toggle_like_state, name='toggle_like_state'),

@@ -46,8 +46,6 @@ class Person(models.Model):
         return self.name
 
 
-
-
 # ON DELETE CASCADE - вместе с данным объектом удаляются все объекты, внешние ключи которых указывают на данный объект.
 class Movie(models.Model):
     tmdbid = models.PositiveIntegerField()

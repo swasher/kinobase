@@ -93,7 +93,7 @@ def create_tag_ajax(request):
     if request.method == u'POST' and 'tag_name' in request.POST:
         tag_name = str(request.POST['tag_name'])
 
-        if tag_name: # если тег не пустой
+        if tag_name:
             if not Tag.objects.filter(name=tag_name).exists():
                 tag = Tag.objects.create(name=tag_name, user=request.user)
                 tag.save()
@@ -138,7 +138,7 @@ def delete_tag_ajax(request):
                     # messages.add_message(request, messages.INFO, "Tag `{}` delete success".format(tag_name))
                     # messages.success(request, "The object has been modified.")
                     tag.delete()
-                    status = 'sucess'
+                    status = 'success'
                 else:
                     # messages.add_message(request, messages.INFO, "Tag `{}` has movies!".format(tag_name))
                     # messages.error(request, "The object was not modified.")
@@ -151,6 +151,29 @@ def delete_tag_ajax(request):
                        }
 
         return JsonResponse(results)
+
+
+@login_required
+@ensure_csrf_cookie
+def rename_tag_ajax(request):
+    """
+    AJAX
+    """
+    try:
+        status = 'success'
+        if request.is_ajax() and request.method == u'POST':
+            POST = request.POST
+            if 'tag_pk' in POST and 'new_name' in POST:
+                tag_pk = int(POST['tag_pk'])
+                new_name = POST['new_name']
+                tag = Tag.objects.get(pk=tag_pk)
+                tag.name = new_name
+                tag.save()
+    except:
+        status = 'failed'
+
+    results = {'status': status}
+    return JsonResponse(results)
 
 
 @login_required
