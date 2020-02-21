@@ -17,11 +17,11 @@ function create_tag(frm) {
             `<li id="${json['tagpk']}" class="list-group-item d-flex justify-content-between">` +
             `<p id="${json['tagpk']}" class="tagname p-0 m-0 flex-grow-1">` +
             `${json["name"]} ` +
-            `<span class="badge badge-pill badge-primary">0</span>` +
             `</p>` +
             `<div class="btn-group btn-group-sm" role="group">` +
-            `<button type="button" data-tag-pk="" data-tag-name="" class="btn btn-success btn-rename-click">Rename</button>` +
-            `<button type="button" data-tag-pk="" data-tag-name="" class="btn btn-danger btn-delete-click">Delete</button>` +
+            `<button type="button" class="btn btn-outline-light" disabled>0 items</button>` +
+            `<button type="button" data-tag-pk="${json['tagpk']}" data-tag-name="" class="btn btn-success btn-rename-click">Rename</button>` +
+            `<button type="button" data-tag-pk="${json['tagpk']}" data-tag-name="" class="btn btn-danger btn-delete-click">Delete</button>` +
             `</div>` +
             `</li>`;
             skeleton = $(skeleton);
