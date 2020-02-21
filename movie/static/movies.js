@@ -96,14 +96,13 @@ function delete_tag(tagpk, tagname, tagobj) {
 }
 
 
-function rename_tag(tagpk, tagname, tagobj) {
+function rename_tag(tagpk, tagname, tagtext) {
     bootbox.prompt({
         title: "Новое имя тега:",
         centerVertical: true,
         callback: function(result) {
             console.log(result);
             let newName = result;
-            // addMessage('Переименовываем: ' + tagname + ' в ' + result, 'info');
             if (result) {
                 $.ajax({
                     url: '/rename_tag_ajax/',
@@ -113,7 +112,7 @@ function rename_tag(tagpk, tagname, tagobj) {
                 })
                 .done(function (json) {
                     if (json['status'] === 'success') {
-                        // tagobj.remove();
+                        tagtext.text(newName);
                         addMessage(`Список ${json['name']} успешно переименован в ${newName}`, 'success');
                         console.log('rename tag: success')
                     } else if (json['status'] === 'failed') {
@@ -411,8 +410,8 @@ $(document).ready(function () {
             console.log('rename');
             let tagpk = $(target).attr('data-tag-pk');      // передается в django для удаления из базы
             let tagname = $(target).attr('data-tag-name');  // используется только в всплывающем алерте
-            let tagobj = $("li#" + tagpk);                  // это DOM-ветка, которую удаляем с экрана при удалении тга
-            rename_tag(tagpk, tagname, tagobj)
+            let tagtext = $("li#" + tagpk + " p");          // это jquery-объект, в котором выполняется переименование тега
+            rename_tag(tagpk, tagname, tagtext)
         }
 
         if (target.classList.contains('btn-delete-click')) {

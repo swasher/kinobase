@@ -56,12 +56,13 @@
                     <ul class="list-group">
                         {% for tag in tags %}
                             <li id="{{ tag.pk }}" class="list-group-item d-flex justify-content-between">
-                                <p id="{{ tag.pk }}" class="tagname p-0 m-0 flex-grow-1">
+                                <p class="tagname p-0 m-0 flex-grow-1">
                                     {{ tag.name }}
-                                    <span class="badge badge-pill badge-primary">{{ tag.total }}</span>
+{#                                    <span class="badge badge-pill badge-primary">{{ tag.total }}</span>#}
                                 </p>
 
                                 <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-outline-light" disabled>{{ tag.total }} items</button>
                                     <button type="button" data-tag-pk="{{ tag.pk }}" data-tag-name="{{ tag.name }}" class="btn btn-success btn-rename-click">Rename</button>
                                     <button type="button" data-tag-pk="{{ tag.pk }}" data-tag-name="{{ tag.name }}" class="btn btn-danger btn-delete-click">Delete</button>
                                 </div>
